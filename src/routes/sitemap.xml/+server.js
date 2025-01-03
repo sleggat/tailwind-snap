@@ -18,7 +18,7 @@ const popularColors = [
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
-	const baseUrl = 'https://yoursite.com'; // Change this
+	const baseUrl = 'https://tailwindcolorsnap.frontandback.co.nz';
 
 	const colors = [
 		// All Tailwind colors
