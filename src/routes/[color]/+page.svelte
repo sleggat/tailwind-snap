@@ -1,16 +1,16 @@
-<!-- src/routes/[color]/+page.svelte -->
 <script>
 	import { findNearestTailwindColor } from '$lib/colors';
 	import { page } from '$app/stores';
+	import ColorPicker from 'svelte-awesome-color-picker';
 
 	const data = $props();
 
-	let inputColor = $state(data?.hex || '#000000');
+	let inputColor = $state(data.data?.hex ?? '#000000');
 	let isValid = $state(true);
-	let nearestColor = $state(data?.nearest || null);
+	let nearestColor = $state(data.data?.nearest ?? null);
 	let copied = $state(false);
+	let isPickerOpen = $state(false);
 
-	// Update URL when input changes
 	$effect(() => {
 		if (!inputColor) return;
 
@@ -24,7 +24,7 @@
 				const newHex = inputColor.replace('#', '');
 				if (window) {
 					history.replaceState(null, '', `/hex${newHex}`);
-					document.title = `Web hex color ${inputColor} is closest to '${nearest.name}' Tailwind class - Hex to Tailwind ColorSnap`;
+					document.title = `Hex color ${inputColor} is closest to '${nearest.name}' Tailwind class - Hex to Tailwind ColorSnap`;
 				}
 			}
 		}
@@ -39,161 +39,130 @@
 </script>
 
 <svelte:head>
-	{#if data?.title}
-		<title>{data.title}</title>
+	{#if data.data?.title}
+		<title>{data.data.title}</title>
 		<meta
 			name="description"
-			content="Convert hex color {data.hex} to the nearest Tailwind CSS color class. {data.hex} matches closest to Tailwind's {data
-				.nearest.name}."
+			content="Convert hex color {data.data.hex} to the nearest Tailwind CSS color class. {data.data
+				.hex} matches closest to Tailwind's {data.data.nearest.name}."
 		/>
-		<meta property="og:title" content={data.title} />
+		<meta property="og:title" content={data.data.title} />
 		<meta
 			property="og:description"
 			content="Find the closest Tailwind CSS color class for any hex color. Perfect for converting designs to Tailwind."
 		/>
-		<meta name="twitter:title" content={data.title} />
+		<meta name="twitter:title" content={data.data.title} />
 		<meta
 			name="twitter:description"
-			content="Convert hex color {data.hex} to the nearest Tailwind CSS color class. {data.hex} matches closest to Tailwind's {data
-				.nearest.name}."
+			content="Convert hex color {data.data.hex} to the nearest Tailwind CSS color class. {data.data
+				.hex} matches closest to Tailwind's {data.data.nearest.name}."
 		/>
 	{/if}
 </svelte:head>
 
-<div class="container">
-	<div class="converter">
-		<div class="input-group">
-			<label for="hex-input">Enter HEX Color</label>
-			<input id="hex-input" type="text" bind:value={inputColor} placeholder="#000000" />
+<div class="flex min-h-screen flex-col bg-gray-50">
+	<header class="bg-white shadow-sm">
+		<div class="mx-auto max-w-3xl px-4 py-6">
+			<h1 class="text-2xl font-bold text-gray-900">Tailwind ColorSnap</h1>
+			<p class="mt-2 text-gray-600">
+				Convert any hex color to its closest Tailwind CSS color class. Perfect for developers
+				matching designs to Tailwind's color palette.
+			</p>
 		</div>
+	</header>
 
-		{#if !isValid}
-			<div class="error">Please enter a valid hex color (e.g., #FF0000 or #F00)</div>
-		{/if}
+	<main class="flex-grow">
+		<div class="mx-auto max-w-3xl px-4 py-8">
+			<div class="rounded-lg bg-white shadow">
+				<div class="p-6">
+					<div class="mb-6">
+						<label for="hex-input" class="mb-2 block text-sm font-medium text-gray-700"
+							>Enter HEX Color</label
+						>
+						<div class="flex">
+							<input
+								id="hex-input"
+								type="text"
+								class="w-full rounded-l-md border border-gray-300 px-3 py-2 font-mono"
+								bind:value={inputColor}
+								placeholder="#000000"
+							/>
+							<ColorPicker
+								bind:hex={inputColor}
+								isOpen={isPickerOpen}
+								closeOnSelection={false}
+								showPreview={false}
+								isError={!isValid}
+								format="hex"
+								isAlpha={false}
+								label=""
+								--input-size="35px"
+							/>
+						</div>
+					</div>
 
-		{#if isValid && nearestColor}
-			<div class="preview">
-				<div class="color-box">
-					<span>Input Color</span>
-					<div class="color-preview" style:background-color={inputColor}></div>
-					<code>{inputColor}</code>
-				</div>
+					{#if !isValid}
+						<div class="mb-6 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+							Please enter a valid hex color (e.g., #FF0000 or #F00)
+						</div>
+					{/if}
 
-				<div class="color-box">
-					<span>Nearest Tailwind Color</span>
-					<div class="color-preview" style:background-color={nearestColor.hex}></div>
-					<code>{nearestColor.name}</code>
+					{#if isValid && nearestColor}
+						<div class="mb-6 grid grid-cols-2 gap-6">
+							<div>
+								<span class="mb-2 block text-sm font-medium text-gray-700">Input Color</span>
+								<div class="h-24 rounded-md shadow-sm" style:background-color={inputColor}></div>
+								<code class="mt-2 block text-sm text-gray-600">{inputColor}</code>
+							</div>
+
+							<div>
+								<span class="mb-2 block text-sm font-medium text-gray-700"
+									>Nearest Tailwind Color</span
+								>
+								<div
+									class="h-24 rounded-md shadow-sm"
+									style:background-color={nearestColor.hex}
+								></div>
+								<code class="mt-2 block text-sm text-gray-600">{nearestColor.name}</code>
+							</div>
+						</div>
+
+						<button
+							onclick={copyToClipboard}
+							class="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+							class:bg-green-600={copied}
+							class:hover:bg-green-700={copied}
+						>
+							{#if copied}
+								✓ Copied!
+							{:else}
+								Copy Tailwind Color
+							{/if}
+						</button>
+					{/if}
 				</div>
 			</div>
+		</div>
+	</main>
 
-			<button onclick={copyToClipboard} class="copy-button" class:copied>
-				{#if copied}
-					✓ Copied!
-				{:else}
-					Copy Tailwind Color
-				{/if}
-			</button>
-		{/if}
-	</div>
+	<footer class="border-t border-gray-200 bg-white">
+		<div class="mx-auto max-w-3xl px-4 py-4">
+			<p class="text-center text-sm text-gray-600">
+				Provided by <a
+					href="https://frontandback.co.nz"
+					class="font-medium text-blue-600 hover:text-blue-800">Front&Back</a
+				>
+			</p>
+		</div>
+	</footer>
 </div>
 
 <style>
-	.container {
-		min-height: 100vh;
-		display: grid;
-		place-items: center;
-		padding: 1rem;
-	}
-
-	.converter {
-		width: 100%;
-		max-width: 32rem;
-		background: white;
-		padding: 2rem;
-		border-radius: 0.5rem;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	}
-
-	.input-group {
-		margin-bottom: 1.5rem;
-	}
-
-	label {
-		display: block;
-		font-size: 0.875rem;
-		font-weight: 500;
-		margin-bottom: 0.5rem;
-	}
-
-	input {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #e2e8f0;
-		border-radius: 0.25rem;
-		font-family: monospace;
-	}
-
-	.error {
-		background: #fee2e2;
-		color: #991b1b;
-		padding: 0.75rem;
-		border-radius: 0.25rem;
-		margin-bottom: 1rem;
-	}
-
-	.preview {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.color-box {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.color-preview {
-		height: 6rem;
-		border-radius: 0.25rem;
-		box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-	}
-
-	span {
-		font-size: 0.875rem;
-		font-weight: 500;
-	}
-
-	code {
-		font-family: monospace;
-		font-size: 0.875rem;
-		color: #4a5568;
-	}
-
-	.copy-button {
-		width: 100%;
-		padding: 0.75rem;
-		background: #3b82f6;
-		color: white;
-		border: none;
-		border-radius: 0.25rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition: background-color 0.2s;
-	}
-
-	.copy-button:hover {
-		background: #2563eb;
-	}
-
-	.copy-button.copied {
-		background: #059669;
-	}
-
-	@media (max-width: 480px) {
-		.preview {
-			grid-template-columns: 1fr;
-		}
+	:global(.sacp-wrapper) {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		margin-top: 0.5rem;
+		z-index: 50;
 	}
 </style>

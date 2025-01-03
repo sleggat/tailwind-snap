@@ -16,6 +16,9 @@ export function load({ params }) {
 		const fullHex = `#${hex}`;
 		const nearest = findNearestTailwindColor(fullHex);
 
+		// Debug check
+		console.log('Server load:', { hex, fullHex, nearest });
+
 		if (!nearest) {
 			throw error(500, 'Could not find nearest color');
 		}

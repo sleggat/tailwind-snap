@@ -81,8 +81,8 @@ export const tailwindColors = [
 	{ name: 'pink-800', hex: '#9d174d' },
 	{ name: 'pink-900', hex: '#831843' }
 ];
-
-export function hexToRgb(hex) {
+// Convert hex to RGB
+function hexToRgb(hex) {
 	const bigint = parseInt(hex.substring(1), 16);
 	const r = (bigint >> 16) & 255;
 	const g = (bigint >> 8) & 255;
@@ -90,18 +90,92 @@ export function hexToRgb(hex) {
 	return [r, g, b];
 }
 
-export function colorDistance(rgb1, rgb2) {
-	return Math.sqrt(
-		Math.pow(rgb2[0] - rgb1[0], 2) + Math.pow(rgb2[1] - rgb1[1], 2) + Math.pow(rgb2[2] - rgb1[2], 2)
-	);
+// Convert RGB to XYZ
+function rgbToXyz(rgb) {
+	let [r, g, b] = rgb.map((val) => {
+		val = val / 255;
+		return val > 0.04045 ? Math.pow((val + 0.055) / 1.055, 2.4) : val / 12.92;
+	});
+
+	r *= 100;
+	g *= 100;
+	b *= 100;
+
+	const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
+	const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
+	const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
+
+	return [x, y, z];
+}
+
+// Convert XYZ to LAB
+function xyzToLab(xyz) {
+	let [x, y, z] = xyz;
+	x = x / 95.047;
+	y = y / 100;
+	z = z / 108.883;
+
+	[x, y, z] = [x, y, z].map((val) => {
+		return val > 0.008856 ? Math.pow(val, 1 / 3) : 7.787 * val + 16 / 116;
+	});
+
+	const l = 116 * y - 16;
+	const a = 500 * (x - y);
+	const b = 200 * (y - z);
+
+	return [l, a, b];
+}
+
+// Convert hex to LAB
+function hexToLab(hex) {
+	const rgb = hexToRgb(hex);
+	const xyz = rgbToXyz(rgb);
+	return xyzToLab(xyz);
+}
+
+// Calculate delta E (color difference) using CIE94 formula
+function deltaE94(lab1, lab2) {
+	const [L1, a1, b1] = lab1;
+	const [L2, a2, b2] = lab2;
+
+	const dL = L1 - L2;
+	const da = a1 - a2;
+	const db = b1 - b2;
+
+	const C1 = Math.sqrt(a1 * a1 + b1 * b1);
+	const C2 = Math.sqrt(a2 * a2 + b2 * b2);
+	const dC = C1 - C2;
+
+	const dH = Math.sqrt(Math.max(0, da * da + db * db - dC * dC));
+
+	const sL = 1;
+	const sC = 1 + 0.045 * C1;
+	const sH = 1 + 0.015 * C1;
+
+	const dL2 = Math.pow(dL / sL, 2);
+	const dC2 = Math.pow(dC / sC, 2);
+	const dH2 = Math.pow(dH / sH, 2);
+
+	return Math.sqrt(dL2 + dC2 + dH2);
 }
 
 export function findNearestTailwindColor(hex) {
-	const rgb = hexToRgb(hex);
+	const inputLab = hexToLab(hex);
+
 	const distances = tailwindColors.map((color) => ({
 		name: color.name,
 		hex: color.hex,
-		distance: colorDistance(rgb, hexToRgb(color.hex))
+		distance: deltaE94(inputLab, hexToLab(color.hex))
 	}));
+
 	return distances.sort((a, b) => a.distance - b.distance)[0];
+}
+
+export function getRandomHexColor() {
+	const letters = '0123456789ABCDEF';
+	let color = '#';
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
 }
