@@ -1,7 +1,9 @@
 <!-- src/routes/hex/[color]/+page.svelte -->
 <script>
 	import { findNearestTailwindColor } from '$lib/colors';
+	import { tailwindColors } from '$lib/colors';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import { goto } from '$app/navigation';
 
 	const data = $props();
 
@@ -38,6 +40,12 @@
 		await navigator.clipboard.writeText(nearestColor.name);
 		copied = true;
 		setTimeout(() => (copied = false), 2000);
+	}
+	async function handleColorClick(e, colorHex) {
+		e.preventDefault();
+		const newHex = colorHex.replace('#', '');
+		await goto(`/hex/${newHex}`, { replaceState: true });
+		inputColor = colorHex;
 	}
 </script>
 
@@ -212,6 +220,45 @@
 									{/if}
 								</button>
 							{/if}
+							<div class="mt-8">
+								<h2 class="mb-4 text-lg font-semibold text-gray-900">Similar Colors</h2>
+								<div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+									{#each tailwindColors
+										.filter((c) => c.name.split('-')[0] === nearestColor.name.split('-')[0])
+										.slice(0, 6) as color}
+										<a
+											href="/hex/{color.hex.substring(1)}"
+											class="group block"
+											onclick={(e) => handleColorClick(e, color.hex)}
+										>
+											<div
+												class="mb-2 h-16 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
+												style:background-color={color.hex}
+											></div>
+											<code class="text-sm text-gray-600">{color.name}</code>
+										</a>
+									{/each}
+								</div>
+							</div>
+
+							<div class="mt-8">
+								<h2 class="mb-4 text-lg font-semibold text-gray-900">Popular Tailwind Colors</h2>
+								<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+									{#each ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'gray', 'indigo'].map( (color) => tailwindColors.find((c) => c.name === `${color}-500`) ) as color}
+										<a
+											href="/hex/{color.hex.substring(1)}"
+											class="group block"
+											onclick={(e) => handleColorClick(e, color.hex)}
+										>
+											<div
+												class="mb-2 h-12 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
+												style:background-color={color.hex}
+											></div>
+											<code class="text-sm text-gray-600">{color.name}</code>
+										</a>
+									{/each}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
