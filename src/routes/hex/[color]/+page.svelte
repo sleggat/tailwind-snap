@@ -14,8 +14,9 @@
 	let nearestColor = $state(data.data?.nearest ?? null);
 	let copied = $state(false);
 	let isPickerOpen = $state(false);
+	let method = $state('lab');
 
-	// Update URL and find nearest color when input changes
+	// Update effect to use selected method
 	$effect(() => {
 		if (!inputColor) return;
 
@@ -23,7 +24,7 @@
 		isValid = hexRegex.test(inputColor);
 
 		if (isValid) {
-			const nearest = findNearestTailwindColor(inputColor);
+			const nearest = findNearestTailwindColor(inputColor, method);
 			if (nearest && (!nearestColor || nearest.hex !== nearestColor.hex)) {
 				nearestColor = nearest;
 				const newHex = inputColor.replace('#', '');
@@ -126,6 +127,44 @@
 											}
 										}}
 									/>
+								</div>
+							</div>
+							<div class="mb-6">
+								<label class="mb-2 block text-sm font-medium text-gray-700">
+									Matching Algorithm
+								</label>
+								<div class="space-y-2">
+									<label class="flex items-center">
+										<input
+											type="radio"
+											bind:group={method}
+											value="lab"
+											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+										/>
+										<span class="ml-2 text-sm text-gray-600">
+											LAB (CIE94) - Most perceptually accurate
+										</span>
+									</label>
+
+									<label class="flex items-center">
+										<input
+											type="radio"
+											bind:group={method}
+											value="rgb"
+											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+										/>
+										<span class="ml-2 text-sm text-gray-600"> RGB - Simple RGB distance </span>
+									</label>
+
+									<label class="flex items-center">
+										<input
+											type="radio"
+											bind:group={method}
+											value="hsl"
+											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+										/>
+										<span class="ml-2 text-sm text-gray-600"> HSL - Better for hue matching </span>
+									</label>
 								</div>
 							</div>
 
