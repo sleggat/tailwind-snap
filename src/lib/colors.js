@@ -81,6 +81,7 @@ export const tailwindColors = [
 	{ name: 'pink-800', hex: '#9d174d' },
 	{ name: 'pink-900', hex: '#831843' }
 ];
+
 // Convert hex to RGB
 function hexToRgb(hex) {
 	const bigint = parseInt(hex.substring(1), 16);
@@ -88,6 +89,15 @@ function hexToRgb(hex) {
 	const g = (bigint >> 8) & 255;
 	const b = bigint & 255;
 	return [r, g, b];
+}
+
+// RGB Distance (simple matching)
+function rgbDistance(hex1, hex2) {
+	const rgb1 = hexToRgb(hex1);
+	const rgb2 = hexToRgb(hex2);
+	return Math.sqrt(
+		Math.pow(rgb2[0] - rgb1[0], 2) + Math.pow(rgb2[1] - rgb1[1], 2) + Math.pow(rgb2[2] - rgb1[2], 2)
+	);
 }
 
 // Convert RGB to XYZ
@@ -159,6 +169,26 @@ function deltaE94(lab1, lab2) {
 	return Math.sqrt(dL2 + dC2 + dH2);
 }
 
+export function findNearestTailwindColor(hex, method = 'lab') {
+	if (method === 'rgb') {
+		return tailwindColors
+			.map((color) => ({
+				...color,
+				distance: rgbDistance(hex, color.hex)
+			}))
+			.sort((a, b) => a.distance - b.distance)[0];
+	}
+
+	// Default LAB method (most accurate)
+	const inputLab = hexToLab(hex);
+	return tailwindColors
+		.map((color) => ({
+			...color,
+			distance: deltaE94(inputLab, hexToLab(color.hex))
+		}))
+		.sort((a, b) => a.distance - b.distance)[0];
+}
+
 export function getRandomHexColor() {
 	const letters = '0123456789ABCDEF';
 	let color = '#';
@@ -166,97 +196,4 @@ export function getRandomHexColor() {
 		color += letters[Math.floor(Math.random() * 16)];
 	}
 	return color;
-}
-
-function rgbDistance(hex1, hex2) {
-	const rgb1 = hexToRgb(hex1);
-	const rgb2 = hexToRgb(hex2);
-	return Math.sqrt(
-		Math.pow(rgb2[0] - rgb1[0], 2) + Math.pow(rgb2[1] - rgb1[1], 2) + Math.pow(rgb2[2] - rgb1[2], 2)
-	);
-}
-
-// HSL Distance
-function hexToHsl(hex) {
-	let [r, g, b] = hexToRgb(hex);
-	r /= 255;
-	g /= 255;
-	b /= 255;
-
-	const max = Math.max(r, g, b);
-	const min = Math.min(r, g, b);
-	let h,
-		s,
-		l = (max + min) / 2;
-
-	if (max === min) {
-		h = s = 0;
-	} else {
-		const d = max - min;
-		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-		switch (max) {
-			case r:
-				h = (g - b) / d + (g < b ? 6 : 0);
-				break;
-			case g:
-				h = (b - r) / d + 2;
-				break;
-			case b:
-				h = (r - g) / d + 4;
-				break;
-		}
-		h /= 6;
-	}
-
-	return [h * 360, s * 100, l * 100];
-}
-
-function hslDistance(hex1, hex2) {
-	const hsl1 = hexToHsl(hex1);
-	const hsl2 = hexToHsl(hex2);
-
-	// Weight hue more heavily than saturation and lightness
-	const hueWeight = 1;
-	const satWeight = 0.5;
-	const lightWeight = 0.75;
-
-	// Account for hue being circular (360 degrees)
-	let hueDiff = Math.abs(hsl1[0] - hsl2[0]);
-	if (hueDiff > 180) hueDiff = 360 - hueDiff;
-
-	return Math.sqrt(
-		Math.pow(hueDiff * hueWeight, 2) +
-			Math.pow((hsl1[1] - hsl2[1]) * satWeight, 2) +
-			Math.pow((hsl1[2] - hsl2[2]) * lightWeight, 2)
-	);
-}
-
-export function findNearestTailwindColor(hex, method = 'lab') {
-	switch (method) {
-		case 'rgb':
-			return tailwindColors
-				.map((color) => ({
-					...color,
-					distance: rgbDistance(hex, color.hex)
-				}))
-				.sort((a, b) => a.distance - b.distance)[0];
-
-		case 'hsl':
-			return tailwindColors
-				.map((color) => ({
-					...color,
-					distance: hslDistance(hex, color.hex)
-				}))
-				.sort((a, b) => a.distance - b.distance)[0];
-
-		case 'lab':
-		default:
-			const inputLab = hexToLab(hex);
-			return tailwindColors
-				.map((color) => ({
-					...color,
-					distance: deltaE94(inputLab, hexToLab(color.hex))
-				}))
-				.sort((a, b) => a.distance - b.distance)[0];
-	}
 }

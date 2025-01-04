@@ -137,7 +137,7 @@
 								</div>
 							</div>
 							<div class="mb-6">
-								<label class="mb-2 block text-sm font-medium text-gray-700">
+								<label class="mb-2 block text-sm font-medium text-gray-700" for="method">
 									Matching Algorithm
 								</label>
 								<div class="space-y-2">
@@ -160,17 +160,9 @@
 											value="rgb"
 											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
 										/>
-										<span class="ml-2 text-sm text-gray-600"> RGB - Simple RGB distance </span>
-									</label>
-
-									<label class="flex items-center">
-										<input
-											type="radio"
-											bind:group={method}
-											value="hsl"
-											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-										/>
-										<span class="ml-2 text-sm text-gray-600"> HSL - Better for hue matching </span>
+										<span class="ml-2 text-sm text-gray-600">
+											RGB - Simple geometric distance
+										</span>
 									</label>
 								</div>
 							</div>
