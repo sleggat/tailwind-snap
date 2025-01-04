@@ -27,14 +27,21 @@
 	$effect(() => {
 		if (!inputColor) return;
 
+		// Add # if missing
+		let colorValue = inputColor;
+		if (!colorValue.startsWith('#')) {
+			colorValue = '#' + colorValue;
+			inputColor = colorValue; // Update the input value
+		}
+
 		const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-		isValid = hexRegex.test(inputColor);
+		isValid = hexRegex.test(colorValue);
 
 		if (isValid) {
-			const nearest = findNearestTailwindColor(inputColor, method);
+			const nearest = findNearestTailwindColor(colorValue, method);
 			if (nearest && (!nearestColor || nearest.hex !== nearestColor.hex)) {
 				nearestColor = nearest;
-				const newHex = inputColor.replace('#', '');
+				const newHex = colorValue.replace('#', '');
 				goto(`/hex/${newHex}`, { replaceState: true });
 			}
 		}
@@ -221,68 +228,71 @@
 										Copy Tailwind Color
 									{/if}
 								</button>
-							{/if}
-							<div class="mt-8">
-								<h2 class="mb-4 text-lg font-semibold text-gray-900">Top Matches</h2>
-								<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
-									{#each tailwindColors
-										.map( (color) => ({ ...color, distance: method === 'rgb' ? rgbDistance(inputColor, color.hex) : deltaE94(hexToLab(inputColor), hexToLab(color.hex)) }) )
-										.sort((a, b) => a.distance - b.distance)
-										.slice(0, 5) as color}
-										<a
-											href="/hex/{color.hex.substring(1)}"
-											class="group block"
-											onclick={(e) => handleColorClick(e, color.hex)}
-										>
-											<div
-												class="mb-2 h-16 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
-												style:background-color={color.hex}
-											></div>
-											<code class="block text-sm text-gray-600">{color.name}</code>
-											<div class="text-xs text-gray-500">Distance: {color.distance.toFixed(2)}</div>
-										</a>
-									{/each}
-								</div>
-							</div>
-							<div class="mt-8">
-								<h2 class="mb-4 text-lg font-semibold text-gray-900">Similar Hue</h2>
-								<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
-									{#each tailwindColors
-										.filter((c) => c.name.split('-')[0] === nearestColor.name.split('-')[0])
-										.slice(0, 11) as color}
-										<a
-											href="/hex/{color.hex.substring(1)}"
-											class="group block"
-											onclick={(e) => handleColorClick(e, color.hex)}
-										>
-											<div
-												class="mb-2 h-16 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
-												style:background-color={color.hex}
-											></div>
-											<code class="text-sm text-gray-600">{color.name}</code>
-										</a>
-									{/each}
-								</div>
-							</div>
 
-							<div class="mt-8 hidden">
-								<h2 class="mb-4 text-lg font-semibold text-gray-900">Popular Tailwind Colors</h2>
-								<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
-									{#each ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'gray', 'indigo'].map( (color) => tailwindColors.find((c) => c.name === `${color}-500`) ) as color}
-										<a
-											href="/hex/{color.hex.substring(1)}"
-											class="group block"
-											onclick={(e) => handleColorClick(e, color.hex)}
-										>
-											<div
-												class="mb-2 h-12 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
-												style:background-color={color.hex}
-											></div>
-											<code class="text-sm text-gray-600">{color.name}</code>
-										</a>
-									{/each}
+								<div class="mt-8">
+									<h2 class="mb-4 text-lg font-semibold text-gray-900">Top Matches</h2>
+									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+										{#each tailwindColors
+											.map( (color) => ({ ...color, distance: method === 'rgb' ? rgbDistance(inputColor, color.hex) : deltaE94(hexToLab(inputColor), hexToLab(color.hex)) }) )
+											.sort((a, b) => a.distance - b.distance)
+											.slice(0, 5) as color}
+											<a
+												href="/hex/{color.hex.substring(1)}"
+												class="group block"
+												onclick={(e) => handleColorClick(e, color.hex)}
+											>
+												<div
+													class="mb-2 h-16 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
+													style:background-color={color.hex}
+												></div>
+												<code class="block text-sm text-gray-600">{color.name}</code>
+												<div class="text-xs text-gray-500">
+													Distance: {color.distance.toFixed(2)}
+												</div>
+											</a>
+										{/each}
+									</div>
 								</div>
-							</div>
+								<div class="mt-8">
+									<h2 class="mb-4 text-lg font-semibold text-gray-900">Similar Hue</h2>
+									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+										{#each tailwindColors
+											.filter((c) => c.name.split('-')[0] === nearestColor.name.split('-')[0])
+											.slice(0, 11) as color}
+											<a
+												href="/hex/{color.hex.substring(1)}"
+												class="group block"
+												onclick={(e) => handleColorClick(e, color.hex)}
+											>
+												<div
+													class="mb-2 h-16 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
+													style:background-color={color.hex}
+												></div>
+												<code class="text-sm text-gray-600">{color.name}</code>
+											</a>
+										{/each}
+									</div>
+								</div>
+
+								<div class="mt-8 hidden">
+									<h2 class="mb-4 text-lg font-semibold text-gray-900">Popular Tailwind Colors</h2>
+									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+										{#each ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'gray', 'indigo'].map( (color) => tailwindColors.find((c) => c.name === `${color}-500`) ) as color}
+											<a
+												href="/hex/{color.hex.substring(1)}"
+												class="group block"
+												onclick={(e) => handleColorClick(e, color.hex)}
+											>
+												<div
+													class="mb-2 h-12 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
+													style:background-color={color.hex}
+												></div>
+												<code class="text-sm text-gray-600">{color.name}</code>
+											</a>
+										{/each}
+									</div>
+								</div>
+							{/if}
 						</div>
 					</div>
 				</div>
