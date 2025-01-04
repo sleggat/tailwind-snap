@@ -30,6 +30,12 @@
 	let isPickerOpen = $state(false);
 	let method = $state('lab');
 	let colorDescription = $derived(nearestColor && describeColor(inputColor));
+	const colorFamily = derived(currentColor, ($color) => {
+		const nearest = findNearestTailwindColor($color);
+		const family = nearest.name.split('-')[0];
+		console.log('Color family is:', family); // This will show the actual value
+		return family;
+	});
 
 	// Update effect to use selected method
 	$effect(() => {
@@ -116,15 +122,15 @@
 </svelte:head>
 
 {#if !inputColor}
-	<div class="flex min-h-screen items-center justify-center bg-violet-50">
+	<div class="flex min-h-screen items-center justify-center bg-{$colorFamily}-50">
 		<div class="text-gray-500">Loading...</div>
 	</div>
 {:else}
-	<div class="flex min-h-screen flex-col bg-violet-50">
-		<div class="flex min-h-screen flex-col bg-violet-50">
+	<div class="flex min-h-screen flex-col bg-{$colorFamily}-50">
+		<div class="flex min-h-screen flex-col bg-{$colorFamily}-50">
 			<header class="bg-white shadow-sm">
 				<div class="mx-auto max-w-3xl px-4 py-6">
-					<h1 class="text-2xl font-bold text-gray-900">Tailwind ColorSnap</h1>
+					<h1 class="text-2xl font-bold text-{$colorFamily}-700">Tailwind ColorSnap</h1>
 					<p class="mt-2 text-gray-600">
 						Convert any hex color to its closest
 						<a
@@ -258,7 +264,7 @@
 										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
 										aria-expanded={expanded}
 									>
-										<h2 class="text-lg font-semibold text-gray-900">
+										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
 											Color Analysis & Technical Details
 										</h2>
 										<svg
@@ -364,7 +370,7 @@
 								</div>
 
 								<div class="mt-8">
-									<h2 class="mb-4 text-lg font-semibold text-gray-900">Top Matches</h2>
+									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-700">Top Matches</h2>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
 										{#each tailwindColors
 											.map( (color) => ({ ...color, distance: method === 'rgb' ? rgbDistance(inputColor, color.hex) : deltaE94(hexToLab(inputColor), hexToLab(color.hex)) }) )
@@ -388,7 +394,7 @@
 									</div>
 								</div>
 								<div class="mt-8">
-									<h2 class="mb-4 text-lg font-semibold text-gray-900">Similar Hue</h2>
+									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-700">Similar Hue</h2>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
 										{#each tailwindColors
 											.filter((c) => c.name.split('-')[0] === nearestColor.name.split('-')[0])
