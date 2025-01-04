@@ -122,8 +122,14 @@
 				<div class="mx-auto max-w-3xl px-4 py-6">
 					<h1 class="text-2xl font-bold text-gray-900">Tailwind ColorSnap</h1>
 					<p class="mt-2 text-gray-600">
-						Convert any hex color to its closest Tailwind CSS color class. Perfect for developers
-						matching designs to Tailwind's color palette.
+						Convert any hex color to its closest
+						<a
+							href="https://tailwindcss.com/docs/customizing-colors"
+							class="text-blue-600 hover:text-blue-800"
+							target="_blank"
+							rel="noopener">Tailwind CSS</a
+						>
+						color class. Perfect for developers matching designs to Tailwind's color palette.
 					</p>
 				</div>
 			</header>
@@ -496,6 +502,16 @@
 							</svg></a
 						>
 					</div>
+					<p class=" my-2 text-center text-xs text-gray-400">
+						Looking for more? Check out
+						<a
+							href="https://tailwindcss.com"
+							class="font-medium text-blue-600 hover:text-blue-800"
+							target="_blank"
+							rel="noopener">Tailwind CSS</a
+						>
+						for the complete framework.
+					</p>
 					<p class="mb-8 mt-2 text-center text-xs text-gray-400">
 						Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by Tailwind CSS or
 						Tailwind Labs Inc.

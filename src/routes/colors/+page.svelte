@@ -2,21 +2,10 @@
 <script>
 	import { tailwindColors } from '$lib/colors';
 	import { toast } from 'svelte-sonner';
-	import { goto } from '$app/navigation';
 
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
 		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
-	}
-	function goBack() {
-		// If there's a previous page in history, go back
-		if (window.history.length > 1) {
-			window.history.back();
-		} else {
-			// If no history, go to home with current color
-			const currentColor = inputColor.replace('#', '');
-			goto(`/hex/${currentColor}`);
-		}
 	}
 </script>
 
@@ -35,7 +24,6 @@
 		content="Browse all Tailwind CSS default colors. Find and copy exact hex codes and class names for your Tailwind projects."
 	/>
 </svelte:head>
-
 <div class="min-h-screen bg-violet-50">
 	<header class="bg-white shadow-sm">
 		<div class="mx-auto max-w-7xl px-4 py-6">
@@ -80,9 +68,9 @@
 			{/each}
 		</div>
 		<div class="mt-8 text-center">
-			<button onclick={goBack} class="font-medium text-blue-600 hover:text-blue-800">
+			<a href="/" class="font-medium text-blue-600 hover:text-blue-800">
 				Back to Tailwind ColorSnap
-			</button>
+			</a>
 		</div>
 	</main>
 
@@ -155,6 +143,16 @@
 					</svg></a
 				>
 			</div>
+			<p class=" my-2 text-center text-xs text-gray-400">
+				Looking for more? Check out
+				<a
+					href="https://tailwindcss.com"
+					class="font-medium text-blue-600 hover:text-blue-800"
+					target="_blank"
+					rel="noopener">Tailwind CSS</a
+				>
+				for the complete framework.
+			</p>
 			<p class="mb-8 mt-2 text-center text-xs text-gray-400">
 				Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by Tailwind CSS or
 				Tailwind Labs Inc.
