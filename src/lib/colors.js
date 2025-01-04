@@ -270,7 +270,7 @@ export const tailwindColors = [
 ];
 
 // Convert hex to RGB
-function hexToRgb(hex) {
+export function hexToRgb(hex) {
 	const bigint = parseInt(hex.substring(1), 16);
 	const r = (bigint >> 16) & 255;
 	const g = (bigint >> 8) & 255;
@@ -288,7 +288,7 @@ export function rgbDistance(hex1, hex2) {
 }
 
 // Convert RGB to XYZ
-function rgbToXyz(rgb) {
+export function rgbToXyz(rgb) {
 	let [r, g, b] = rgb.map((val) => {
 		val = val / 255;
 		return val > 0.04045 ? Math.pow((val + 0.055) / 1.055, 2.4) : val / 12.92;
@@ -306,7 +306,7 @@ function rgbToXyz(rgb) {
 }
 
 // Convert XYZ to LAB
-function xyzToLab(xyz) {
+export function xyzToLab(xyz) {
 	let [x, y, z] = xyz;
 	x = x / 95.047;
 	y = y / 100;
@@ -376,6 +376,40 @@ export function findNearestTailwindColor(hex, method = 'lab') {
 		.sort((a, b) => a.distance - b.distance)[0];
 }
 
+export function hexToHsl(hex) {
+	let [r, g, b] = hexToRgb(hex);
+	r /= 255;
+	g /= 255;
+	b /= 255;
+
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	let h,
+		s,
+		l = (max + min) / 2;
+
+	if (max === min) {
+		h = s = 0;
+	} else {
+		const d = max - min;
+		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+		switch (max) {
+			case r:
+				h = (g - b) / d + (g < b ? 6 : 0);
+				break;
+			case g:
+				h = (b - r) / d + 2;
+				break;
+			case b:
+				h = (r - g) / d + 4;
+				break;
+		}
+		h /= 6;
+	}
+
+	return [h * 360, s * 100, l * 100];
+}
+
 export function getRandomHexColor() {
 	const letters = '0123456789ABCDEF';
 	let color = '#';
@@ -383,4 +417,22 @@ export function getRandomHexColor() {
 		color += letters[Math.floor(Math.random() * 16)];
 	}
 	return color;
+}
+
+export function luminance(r, g, b) {
+	let [rs, gs, bs] = [r, g, b].map((c) => {
+		c = c / 255;
+		return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+	});
+	return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+export function getContrastRatio(hex1, hex2) {
+	const rgb1 = hexToRgb(hex1);
+	const rgb2 = hexToRgb(hex2);
+	const l1 = luminance(rgb1[0], rgb1[1], rgb1[2]);
+	const l2 = luminance(rgb2[0], rgb2[1], rgb2[2]);
+	const lightest = Math.max(l1, l2);
+	const darkest = Math.min(l1, l2);
+	return (lightest + 0.05) / (darkest + 0.05);
 }

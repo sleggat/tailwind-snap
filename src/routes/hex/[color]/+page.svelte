@@ -5,11 +5,17 @@
 		tailwindColors,
 		rgbDistance,
 		hexToLab,
-		deltaE94
+		deltaE94,
+		hexToRgb,
+		hexToHsl,
+		getContrastRatio,
+		luminance
 	} from '$lib/colors';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
+	import { slide } from 'svelte/transition';
+	let expanded = $state(false);
 
 	const data = $props();
 
@@ -230,6 +236,113 @@
 										Copy Tailwind Color
 									{/if}
 								</button>
+
+								<div class="mt-8">
+									<button
+										onclick={() => (expanded = !expanded)}
+										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm hover:bg-gray-50"
+										aria-expanded={expanded}
+									>
+										<span class="font-medium text-gray-900">Color Analysis & Technical Details</span
+										>
+										<svg
+											class="h-5 w-5 text-gray-500 transition-transform duration-200"
+											class:rotate-180={expanded}
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M19 9l-7 7-7-7"
+											/>
+										</svg>
+									</button>
+
+									{#if expanded}
+										<div class="mt-2 rounded-lg bg-white p-6 shadow-sm" transition:slide>
+											<div class="prose prose-sm">
+												{#if nearestColor}
+													{#if nearestColor.distance < 5}
+														<p>
+															This color is an excellent match with Tailwind's {nearestColor.name},
+															with a very small difference (distance: {nearestColor.distance.toFixed(
+																2
+															)}).
+														</p>
+													{:else if nearestColor.distance < 15}
+														<p>
+															This color matches well with Tailwind's {nearestColor.name}, showing
+															only subtle differences (distance: {nearestColor.distance.toFixed(
+																2
+															)}).
+														</p>
+													{:else}
+														<p>
+															This color is closest to Tailwind's {nearestColor.name}, though there
+															are noticeable differences (distance: {nearestColor.distance.toFixed(
+																2
+															)}).
+														</p>
+													{/if}
+
+													{#if nearestColor.name.includes('-50') || nearestColor.name.includes('-100')}
+														<p>
+															As a very light shade in the {nearestColor.name.split('-')[0]} family,
+															this color works well for subtle backgrounds and hover states.
+														</p>
+													{:else if nearestColor.name.includes('-900') || nearestColor.name.includes('-950')}
+														<p>
+															Being one of the darkest shades in the {nearestColor.name.split(
+																'-'
+															)[0]} family, this color provides strong contrast and works well for text
+															or prominent UI elements.
+														</p>
+													{:else if nearestColor.name.includes('-500')}
+														<p>
+															This is a medium shade in the {nearestColor.name.split('-')[0]} family,
+															making it versatile for both backgrounds and foreground elements.
+														</p>
+													{/if}
+
+													{#if method === 'lab'}
+														<p>
+															Using LAB color space matching provides perceptually accurate results,
+															as it accounts for how human vision perceives color differences.
+														</p>
+													{:else}
+														<p>
+															Using RGB color space matching provides straightforward geometric
+															distance calculations between colors.
+														</p>
+													{/if}
+
+													<div class="mt-4">
+														<h3 class="mb-2 text-sm font-medium text-gray-700">
+															Technical Details:
+														</h3>
+														<ul class="list-disc pl-5 text-sm text-gray-600">
+															<li>RGB values: {hexToRgb(inputColor).join(', ')}</li>
+															<li>
+																HSL values: {hexToHsl(inputColor)
+																	.map((v) => Math.round(v))
+																	.join(', ')}
+															</li>
+															<li>
+																Contrast ratio with white: {getContrastRatio(
+																	inputColor,
+																	'#ffffff'
+																).toFixed(2)}
+															</li>
+														</ul>
+													</div>
+												{/if}
+											</div>
+										</div>
+									{/if}
+								</div>
 
 								<div class="mt-8">
 									<h2 class="mb-4 text-lg font-semibold text-gray-900">Top Matches</h2>
