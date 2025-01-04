@@ -8,6 +8,7 @@
 		deltaE94
 	} from '$lib/colors';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 
 	const data = $props();
@@ -47,6 +48,7 @@
 	async function copyToClipboard() {
 		if (!nearestColor?.name) return;
 		await navigator.clipboard.writeText(nearestColor.name);
+		toast.success('Tailwind class copied to clipboard');
 		copied = true;
 		setTimeout(() => (copied = false), 2000);
 	}
@@ -56,13 +58,16 @@
 		await goto(`/hex/${newHex}`, { replaceState: true });
 		inputColor = colorHex;
 	}
+	async function copyColor(text, type) {
+		await navigator.clipboard.writeText(text);
+		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
+	}
 </script>
 
 <svelte:head>
 	{#if nearestColor}
 		<title
-			>Web hex color {inputColor} is closest to '{nearestColor.name}' Tailwind class - Hex to
-			Tailwind ColorSnap</title
+			>The closest Tailwind color to {inputColor} is {nearestColor.name} | Tailwind ColorSnap</title
 		>
 		<meta
 			name="description"
@@ -294,6 +299,36 @@
 					</div>
 				</div>
 			</main>
+			<!-- Add this before the footer -->
+			<div class="mx-auto max-w-7xl px-4 py-12">
+				<h2 class="mb-8 text-lg font-semibold text-gray-900">All Tailwind Colors</h2>
+
+				<div class="grid grid-cols-2 gap-4 md:grid-cols-11">
+					{#each tailwindColors as color}
+						<div class="flex flex-col rounded-lg bg-white p-3 shadow-sm">
+							<div
+								class="mb-2 h-8 rounded-md shadow-sm ring-1 ring-inset ring-gray-200"
+								style:background-color={color.hex}
+							></div>
+							<div class="mb-1 text-xs font-medium text-gray-900">{color.name}</div>
+							<div class="mt-auto flex gap-1">
+								<button
+									class="flex-1 rounded bg-gray-100 px-1.5 py-1 text-[10px] text-gray-600 hover:bg-gray-200"
+									onclick={() => copyColor(color.name, 'name')}
+								>
+									name
+								</button>
+								<button
+									class="flex-1 rounded bg-gray-100 px-1.5 py-1 text-[10px] text-gray-600 hover:bg-gray-200"
+									onclick={() => copyColor(color.hex, 'hex')}
+								>
+									hex
+								</button>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
 
 			<footer class="border-t border-gray-200 bg-white">
 				<div class="mx-auto max-w-3xl px-4 pt-12">
