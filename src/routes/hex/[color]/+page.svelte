@@ -140,11 +140,11 @@
 								<label for="hex-input" class="mb-2 block text-sm font-medium text-gray-700"
 									>Enter HEX Color</label
 								>
-								<div class="flex">
+								<div class="flex gap-4">
 									<input
 										id="hex-input"
 										type="text"
-										class="w-full rounded-l-md border border-gray-300 px-3 py-2 font-mono"
+										class="w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-xl"
 										bind:value={inputColor}
 										placeholder="#000000"
 									/>
@@ -156,7 +156,7 @@
 										format="hex"
 										isAlpha={false}
 										label=""
-										--input-size="35px"
+										--input-size="38px"
 										on:change={(e) => {
 											if (e.detail && typeof e.detail === 'string') {
 												inputColor = e.detail;
@@ -249,10 +249,10 @@
 								<div class="mt-8">
 									<button
 										onclick={() => (expanded = !expanded)}
-										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm hover:bg-gray-50"
+										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
 										aria-expanded={expanded}
 									>
-										<h2 class="mb-4 text-lg font-semibold text-gray-900">
+										<h2 class="text-lg font-semibold text-gray-900">
 											Color Analysis & Technical Details
 										</h2>
 										<svg
