@@ -1,5 +1,7 @@
 // src/lib/colors.js
 export const tailwindColors = [
+	{ name: 'white', hex: '#ffffff' },
+	{ name: 'black', hex: '#000000' },
 	{ name: 'gray-50', hex: '#f9fafb' },
 	{ name: 'gray-100', hex: '#f3f4f6' },
 	{ name: 'gray-200', hex: '#e5e7eb' },
