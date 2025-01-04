@@ -195,6 +195,12 @@
 											style:background-color={nearestColor.hex}
 										></div>
 										<code class="mt-2 block text-sm text-gray-600">{nearestColor.name}</code>
+										<div class="mt-1 text-xs text-gray-500">
+											Distance: {nearestColor.distance.toFixed(2)}
+											{#if nearestColor.distance > 20}
+												<span class="ml-1 text-amber-600">(significant difference)</span>
+											{/if}
+										</div>
 									</div>
 								</div>
 
