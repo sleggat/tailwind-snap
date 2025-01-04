@@ -9,7 +9,7 @@
 		hexToRgb,
 		hexToHsl,
 		getContrastRatio,
-		luminance
+		describeColor
 	} from '$lib/colors';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { toast } from 'svelte-sonner';
@@ -26,6 +26,7 @@
 	let copied = $state(false);
 	let isPickerOpen = $state(false);
 	let method = $state('lab');
+	let colorDescription = $derived(nearestColor && describeColor(inputColor));
 
 	// Update effect to use selected method
 	$effect(() => {
@@ -251,8 +252,9 @@
 										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm hover:bg-gray-50"
 										aria-expanded={expanded}
 									>
-										<span class="font-medium text-gray-900">Color Analysis & Technical Details</span
-										>
+										<h2 class="mb-4 text-lg font-semibold text-gray-900">
+											Color Analysis & Technical Details
+										</h2>
 										<svg
 											class="h-5 w-5 text-gray-500 transition-transform duration-200"
 											class:rotate-180={expanded}
@@ -270,9 +272,12 @@
 									</button>
 
 									{#if expanded}
-										<div class="mt-2 rounded-lg bg-white p-6 shadow-sm" transition:slide>
+										<div class="mt-2 rounded-lg bg-white p-4 shadow-sm" transition:slide>
 											<div class="prose prose-sm">
 												{#if nearestColor}
+													<p>
+														{colorDescription}
+													</p>
 													{#if nearestColor.distance < 5}
 														<p>
 															This color is an excellent match with Tailwind's {nearestColor.name},

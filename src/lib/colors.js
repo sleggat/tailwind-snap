@@ -436,3 +436,78 @@ export function getContrastRatio(hex1, hex2) {
 	const darkest = Math.min(l1, l2);
 	return (lightest + 0.05) / (darkest + 0.05);
 }
+
+export function describeColor(hex) {
+	const hsl = hexToHsl(hex);
+	const [h, s, l] = hsl;
+
+	console.log('HSL values:', { h, s, l }); // Debug log
+
+	function getHueDescription(hue) {
+		// Normalize hue to 0-360 range first
+		const normalizedHue = ((hue % 360) + 360) % 360;
+
+		console.log('Normalized hue:', normalizedHue); // Debug log
+
+		const hueRanges = [
+			{ range: [355, 360], name: 'red' },
+			{ range: [0, 10], name: 'red' }, // Split red range to handle wrap-around
+			{ range: [11, 40], name: 'orange' },
+			{ range: [41, 55], name: 'amber' },
+			{ range: [56, 70], name: 'yellow' },
+			{ range: [71, 140], name: 'lime' },
+			{ range: [141, 160], name: 'green' },
+			{ range: [161, 180], name: 'emerald' },
+			{ range: [181, 200], name: 'teal' },
+			{ range: [201, 220], name: 'cyan' },
+			{ range: [221, 240], name: 'sky' },
+			{ range: [241, 260], name: 'blue' },
+			{ range: [261, 280], name: 'indigo' },
+			{ range: [281, 320], name: 'violet' },
+			{ range: [321, 330], name: 'purple' },
+			{ range: [331, 345], name: 'fuchsia' },
+			{ range: [346, 354], name: 'rose' }
+		];
+
+		const matchedColor = hueRanges.find(
+			(range) => range.range[0] <= normalizedHue && normalizedHue <= range.range[1]
+		);
+
+		if (!matchedColor) {
+			console.log('No match found for hue:', normalizedHue); // Debug log
+		}
+
+		return matchedColor?.name || 'gray';
+	}
+
+	// Improve saturation descriptions
+	function getSaturationDesc(sat) {
+		if (sat < 5) return 'neutral';
+		if (sat < 15) return 'slightly saturated';
+		if (sat < 35) return 'muted';
+		if (sat < 65) return 'moderately saturated';
+		if (sat < 85) return 'vibrant';
+		return 'highly saturated';
+	}
+
+	// More precise lightness descriptions
+	function getLightnessDesc(light) {
+		if (light < 5) return 'nearly black';
+		if (light < 15) return 'very dark';
+		if (light < 35) return 'dark';
+		if (light > 95) return 'nearly white';
+		if (light > 85) return 'very light';
+		if (light > 65) return 'light';
+		if (light < 45) return 'deep';
+		return 'medium';
+	}
+
+	const primaryHue = getHueDescription(h);
+	const satDescription = getSaturationDesc(s);
+	const lightDescription = getLightnessDesc(l);
+
+	// For debugging
+	console.log('Color descriptions:', { primaryHue, satDescription, lightDescription });
+
+	return `${hex} is a ${lightDescription}, ${satDescription} ${primaryHue} with ${Math.round(s)}% saturation and ${Math.round(l)}% lightness`;
+}
