@@ -441,17 +441,20 @@ export function describeColor(hex) {
 	const hsl = hexToHsl(hex);
 	const [h, s, l] = hsl;
 
-	console.log('HSL values:', { h, s, l }); // Debug log
+	// Special cases first
+	if (l === 0) return 'This is black (0% lightness)';
+	if (l === 100) return 'This is white (100% lightness)';
+	if (s === 0) {
+		// Handle grays
+		return `This is a ${getLightnessDesc(l)} gray with ${Math.round(l)}% lightness`;
+	}
 
 	function getHueDescription(hue) {
-		// Normalize hue to 0-360 range first
 		const normalizedHue = ((hue % 360) + 360) % 360;
-
-		console.log('Normalized hue:', normalizedHue); // Debug log
 
 		const hueRanges = [
 			{ range: [355, 360], name: 'red' },
-			{ range: [0, 10], name: 'red' }, // Split red range to handle wrap-around
+			{ range: [0, 10], name: 'red' },
 			{ range: [11, 40], name: 'orange' },
 			{ range: [41, 55], name: 'amber' },
 			{ range: [56, 70], name: 'yellow' },
@@ -473,14 +476,9 @@ export function describeColor(hex) {
 			(range) => range.range[0] <= normalizedHue && normalizedHue <= range.range[1]
 		);
 
-		if (!matchedColor) {
-			console.log('No match found for hue:', normalizedHue); // Debug log
-		}
-
 		return matchedColor?.name || 'gray';
 	}
 
-	// Improve saturation descriptions
 	function getSaturationDesc(sat) {
 		if (sat < 5) return 'neutral';
 		if (sat < 15) return 'slightly saturated';
@@ -490,7 +488,6 @@ export function describeColor(hex) {
 		return 'highly saturated';
 	}
 
-	// More precise lightness descriptions
 	function getLightnessDesc(light) {
 		if (light < 5) return 'nearly black';
 		if (light < 15) return 'very dark';
@@ -506,8 +503,5 @@ export function describeColor(hex) {
 	const satDescription = getSaturationDesc(s);
 	const lightDescription = getLightnessDesc(l);
 
-	// For debugging
-	console.log('Color descriptions:', { primaryHue, satDescription, lightDescription });
-
-	return `${hex} is a ${lightDescription}, ${satDescription} ${primaryHue} with ${Math.round(s)}% saturation and ${Math.round(l)}% lightness`;
+	return `This is a ${lightDescription}, ${satDescription} ${primaryHue} with ${Math.round(s)}% saturation and ${Math.round(l)}% lightness`;
 }
