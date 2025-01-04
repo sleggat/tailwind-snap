@@ -115,12 +115,12 @@
 </svelte:head>
 
 {#if !inputColor}
-	<div class="flex min-h-screen items-center justify-center bg-gray-50">
+	<div class="flex min-h-screen items-center justify-center bg-violet-50">
 		<div class="text-gray-500">Loading...</div>
 	</div>
 {:else}
-	<div class="flex min-h-screen flex-col bg-gray-50">
-		<div class="flex min-h-screen flex-col bg-gray-50">
+	<div class="flex min-h-screen flex-col bg-violet-50">
+		<div class="flex min-h-screen flex-col bg-violet-50">
 			<header class="bg-white shadow-sm">
 				<div class="mx-auto max-w-3xl px-4 py-6">
 					<h1 class="text-2xl font-bold text-gray-900">Tailwind ColorSnap</h1>

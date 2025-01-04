@@ -2,10 +2,21 @@
 <script>
 	import { tailwindColors } from '$lib/colors';
 	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
 		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
+	}
+	function goBack() {
+		// If there's a previous page in history, go back
+		if (window.history.length > 1) {
+			window.history.back();
+		} else {
+			// If no history, go to home with current color
+			const currentColor = inputColor.replace('#', '');
+			goto(`/hex/${currentColor}`);
+		}
 	}
 </script>
 
@@ -25,7 +36,7 @@
 	/>
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-violet-50">
 	<header class="bg-white shadow-sm">
 		<div class="mx-auto max-w-7xl px-4 py-6">
 			<h1 class="text-2xl font-bold text-gray-900">Tailwind CSS Colors</h1>
@@ -69,9 +80,9 @@
 			{/each}
 		</div>
 		<div class="mt-8 text-center">
-			<a href="/" class="font-medium text-blue-600 hover:text-blue-800">
+			<button onclick={goBack} class="font-medium text-blue-600 hover:text-blue-800">
 				Back to Tailwind ColorSnap
-			</a>
+			</button>
 		</div>
 	</main>
 
