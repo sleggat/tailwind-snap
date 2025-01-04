@@ -2,10 +2,15 @@
 <script>
 	import { tailwindColors } from '$lib/colors';
 	import { toast } from 'svelte-sonner';
+	import { currentColor } from '$lib/stores';
+	import { goto } from '$app/navigation';
 
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
 		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
+	}
+	function goBack() {
+		goto(`/hex/${$currentColor.replace('#', '')}`);
 	}
 </script>
 
@@ -68,9 +73,9 @@
 			{/each}
 		</div>
 		<div class="mt-8 text-center">
-			<a href="/" class="font-medium text-blue-600 hover:text-blue-800">
+			<button onclick={goBack} class="font-medium text-blue-600 hover:text-blue-800">
 				Back to Tailwind ColorSnap
-			</a>
+			</button>
 		</div>
 	</main>
 

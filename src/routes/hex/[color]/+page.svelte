@@ -16,6 +16,8 @@
 	import { goto } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import { derived } from 'svelte/store';
+	import { currentColor } from '$lib/stores';
+
 	let expanded = $state(false);
 
 	const data = $props();
@@ -32,6 +34,8 @@
 	// Update effect to use selected method
 	$effect(() => {
 		if (!inputColor) return;
+
+		$currentColor = inputColor;
 
 		// Add # if missing
 		let colorValue = inputColor;
