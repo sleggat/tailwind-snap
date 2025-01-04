@@ -46,20 +46,20 @@
 		</div>
 
 		<!-- Color grid -->
-		<div class="grid grid-cols-11 gap-1 md:gap-4">
+		<div class="grid grid-cols-11 gap-y-4 md:gap-x-0.5">
 			{#each tailwindColors as color}
-				<div class="flex flex-col rounded-lg bg-white py-3 shadow-sm md:px-3">
-					<div class="mb-2 h-8 rounded-sm" style:background-color={color.hex}></div>
-					<div class="mb-1 text-xs font-medium text-gray-900">{color.name}</div>
+				<div class="flex flex-col rounded-lg bg-white px-1 py-0.5">
+					<div class="mb-1 h-12 rounded-sm" style:background-color={color.hex}></div>
+					<div class="mb-1 text-xs font-medium text-gray-500">{color.name}</div>
 					<div class="mt-auto flex flex-wrap gap-1">
 						<button
-							class="flex-1 rounded bg-gray-100 px-1.5 py-1 text-[10px] text-gray-600 hover:bg-gray-200"
+							class="flex-1 rounded bg-gray-100 px-1.5 py-1 text-[10px] text-gray-500 hover:bg-gray-200"
 							onclick={() => copyColor(color.name, 'name')}
 						>
 							name
 						</button>
 						<button
-							class="flex-1 rounded bg-gray-100 px-1.5 py-1 text-[10px] text-gray-600 hover:bg-gray-200"
+							class="flex-1 rounded bg-gray-100 px-1.5 py-1 text-[10px] text-gray-500 hover:bg-gray-200"
 							onclick={() => copyColor(color.hex, 'hex')}
 						>
 							hex
