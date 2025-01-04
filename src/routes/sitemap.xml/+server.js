@@ -41,6 +41,11 @@ export async function GET({ url }) {
             <changefreq>daily</changefreq>
             <priority>1.0</priority>
         </url>
+		<url>
+            <loc>${baseUrl}/colors</loc>
+            <changefreq>weekly</changefreq>
+            <priority>1.0</priority>
+        </url>
         ${colors
 					.map(
 						(color) => `
@@ -52,6 +57,7 @@ export async function GET({ url }) {
         `
 					)
 					.join('')}
+					
     </urlset>`.trim();
 
 	return new Response(xml, {
