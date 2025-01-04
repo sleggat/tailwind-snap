@@ -15,6 +15,7 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import { slide } from 'svelte/transition';
+	import { derived } from 'svelte/store';
 	let expanded = $state(false);
 
 	const data = $props();
@@ -73,57 +74,33 @@
 
 <svelte:head>
 	{#if nearestColor}
-		{#if nearestColor.distance === 0}
-			<title>{inputColor} is Tailwind's {nearestColor.name} color class | Tailwind ColorSnap</title>
-		{:else if nearestColor.distance < 5}
-			<title
-				>{inputColor} closely matches Tailwind's {nearestColor.name} color class | Tailwind ColorSnap</title
-			>
-		{:else}
-			<title
-				>The closest Tailwind color class to {inputColor} is {nearestColor.name} | Tailwind ColorSnap</title
-			>
-		{/if}
-		<meta
-			name="description"
-			content="Convert hex color {inputColor} to the nearest Tailwind CSS color class. {inputColor} matches closest to Tailwind's {nearestColor.name}."
-		/>
-		<meta
-			property="og:url"
-			content="https://tailwindcolorsnap.frontandback.co.nz/hex/{inputColor.replace('#', '')}"
-		/>
-		<meta
-			property="og:title"
-			content="Web hex color {inputColor} is closest to '{nearestColor.name}' Tailwind class - Hex to Tailwind ColorSnap"
-		/>
-		<meta
-			property="og:description"
-			content="Find the closest Tailwind CSS color class for any hex color. Perfect for converting designs to Tailwind."
-		/>
-		<meta
-			name="twitter:title"
-			content="Web hex color {inputColor} is closest to '{nearestColor.name}' Tailwind class - Hex to Tailwind ColorSnap"
-		/>
-		<meta
-			name="twitter:description"
-			content="Convert hex color {inputColor} to the nearest Tailwind CSS color class. {inputColor} matches closest to Tailwind's {nearestColor.name}."
-		/>
-		<link
-			rel="canonical"
-			href="https://tailwindcolorsnap.frontandback.co.nz/hex/{inputColor.replace('#', '')}"
-		/>
-		<meta
-			property="og:image"
-			content="https://tailwindcolorsnap.frontandback.co.nz/og/{inputColor.replace('#', '')}"
-		/>
+		{@const pageTitle =
+			nearestColor.distance === 0
+				? `${inputColor} is Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
+				: nearestColor.distance < 5
+					? `${inputColor} closely matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
+					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
+
+		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class. ${inputColor} matches closest to Tailwind's ${nearestColor.name}.`}
+		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '')}`}
+		{@const imageUrl = `https://tailwindcolorsnap.frontandback.co.nz/og/${inputColor.replace('#', '')}`}
+
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={url} />
+
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={url} />
+		<meta property="og:image" content={imageUrl} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:type" content="image/svg+xml" />
+
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta
-			name="twitter:image"
-			content="https://tailwindcolorsnap.frontandback.co.nz/og/{inputColor.replace('#', '')}"
-		/>
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={imageUrl} />
 	{:else}
 		<title>Tailwind ColorSnap - Convert hex colors to Tailwind CSS classes</title>
 		<meta

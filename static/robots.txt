@@ -1,5 +1,4 @@
 // static/robots.txt
 User-agent: *
-Allow: /?hex=
 Allow: /
 Disallow: /api/
