@@ -104,14 +104,29 @@
 			name="twitter:description"
 			content="Convert hex color {inputColor} to the nearest Tailwind CSS color class. {inputColor} matches closest to Tailwind's {nearestColor.name}."
 		/>
-		<link rel="canonical" href="https://yoursite.com/?hex={inputColor.replace('#', '')}" />
+		<link
+			rel="canonical"
+			href="https://tailwindcolorsnap.frontandback.co.nz/?hex={inputColor.replace('#', '')}"
+		/>
+		<meta
+			property="og:image"
+			content="https://tailwindcolorsnap.frontandback.co.nz/og/{inputColor.replace('#', '')}"
+		/>
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:type" content="image/svg+xml" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta
+			name="twitter:image"
+			content="https://tailwindcolorsnap.frontandback.co.nz/og/{inputColor.replace('#', '')}"
+		/>
 	{:else}
 		<title>Tailwind ColorSnap - Convert hex colors to Tailwind CSS classes</title>
 		<meta
 			name="description"
 			content="Convert hex color codes to their nearest Tailwind CSS color class. Perfect for converting designs to Tailwind."
 		/>
-		<link rel="canonical" href="https://yoursite.com" />
+		<link rel="canonical" href="https://tailwindcolorsnap.frontandback.co.nz" />
 	{/if}
 </svelte:head>
 
