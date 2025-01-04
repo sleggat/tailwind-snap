@@ -72,9 +72,17 @@
 
 <svelte:head>
 	{#if nearestColor}
-		<title
-			>The closest Tailwind color to {inputColor} is {nearestColor.name} | Tailwind ColorSnap</title
-		>
+		{#if nearestColor.distance === 0}
+			<title>{inputColor} is Tailwind's {nearestColor.name} color class | Tailwind ColorSnap</title>
+		{:else if nearestColor.distance < 5}
+			<title
+				>{inputColor} closely matches Tailwind's {nearestColor.name} color class | Tailwind ColorSnap</title
+			>
+		{:else}
+			<title
+				>The closest Tailwind color class to {inputColor} is {nearestColor.name} | Tailwind ColorSnap</title
+			>
+		{/if}
 		<meta
 			name="description"
 			content="Convert hex color {inputColor} to the nearest Tailwind CSS color class. {inputColor} matches closest to Tailwind's {nearestColor.name}."
