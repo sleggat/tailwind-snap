@@ -92,7 +92,7 @@ function hexToRgb(hex) {
 }
 
 // RGB Distance (simple matching)
-function rgbDistance(hex1, hex2) {
+export function rgbDistance(hex1, hex2) {
 	const rgb1 = hexToRgb(hex1);
 	const rgb2 = hexToRgb(hex2);
 	return Math.sqrt(
@@ -137,14 +137,14 @@ function xyzToLab(xyz) {
 }
 
 // Convert hex to LAB
-function hexToLab(hex) {
+export function hexToLab(hex) {
 	const rgb = hexToRgb(hex);
 	const xyz = rgbToXyz(rgb);
 	return xyzToLab(xyz);
 }
 
 // Calculate delta E (color difference) using CIE94 formula
-function deltaE94(lab1, lab2) {
+export function deltaE94(lab1, lab2) {
 	const [L1, a1, b1] = lab1;
 	const [L2, a2, b2] = lab2;
 
