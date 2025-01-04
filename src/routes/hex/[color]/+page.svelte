@@ -12,9 +12,6 @@
 
 	const data = $props();
 
-	// Debug log to see what we're getting
-	console.log('Received data:', data);
-
 	// Remember data structure comes from +page.server.js return value
 	let inputColor = $state(data.data?.hex ?? '#000000');
 	let isValid = $state(true);

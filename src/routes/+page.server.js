@@ -6,6 +6,5 @@ import { getRandomHexColor } from '$lib/colors';
 export async function load() {
 	// Remove the # and ensure we get a 6-digit hex
 	const randomColor = getRandomHexColor().substring(1).padEnd(6, '0');
-	console.log('Generating random color:', randomColor); // Debug log
 	throw redirect(303, `/hex/${randomColor}`);
 }
