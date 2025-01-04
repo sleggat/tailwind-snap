@@ -1,3 +1,4 @@
+// tailwind.config.ts
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
