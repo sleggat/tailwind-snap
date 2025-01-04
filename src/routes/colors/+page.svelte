@@ -40,9 +40,8 @@
 		<div class="prose mb-8 max-w-none">
 			<p>
 				Tailwind CSS includes a modern color palette with a wide range of beautiful colors. Each
-				color comes in 10 different shades (plus a new 950 shade), giving you precise control over
-				your design. From light pastels to deep, rich tones, you'll find colors that work perfectly
-				for any project.
+				color comes in 11 different shades, giving you precise control over your design. From light
+				pastels to deep, rich tones, you'll find colors that work perfectly for any project.
 			</p>
 		</div>
 
