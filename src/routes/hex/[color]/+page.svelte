@@ -89,6 +89,10 @@
 			content="Convert hex color {inputColor} to the nearest Tailwind CSS color class. {inputColor} matches closest to Tailwind's {nearestColor.name}."
 		/>
 		<meta
+			property="og:url"
+			content="https://tailwindcolorsnap.frontandback.co.nz/hex/{inputColor.replace('#', '')}"
+		/>
+		<meta
 			property="og:title"
 			content="Web hex color {inputColor} is closest to '{nearestColor.name}' Tailwind class - Hex to Tailwind ColorSnap"
 		/>
@@ -106,7 +110,7 @@
 		/>
 		<link
 			rel="canonical"
-			href="https://tailwindcolorsnap.frontandback.co.nz/?hex={inputColor.replace('#', '')}"
+			href="https://tailwindcolorsnap.frontandback.co.nz/hex/{inputColor.replace('#', '')}"
 		/>
 		<meta
 			property="og:image"
