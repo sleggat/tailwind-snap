@@ -78,6 +78,19 @@
 					</div>
 				</div>
 			</div>
+			<div class="mx-auto max-w-3xl px-4 py-8">
+				<div class="rounded-lg bg-white shadow">
+					<div class="p-6 text-xl text-gray-600">
+						<h2 class="text-2xl font-medium">About Front&Back</h2>
+					</div>
+					<div class="p-6 text-xl text-gray-600">
+						<p class="">
+							Front&Back is an Aotearoa New Zealand-based graphic design studio, specialising in
+							bespoke websites, branding, and print design.
+						</p>
+					</div>
+				</div>
+			</div>
 			<div class="mb-12 mt-8 text-center">
 				<button onclick={goBack} class="font-medium text-blue-600 hover:text-blue-800">
 					Back to Tailwind ColorSnap
