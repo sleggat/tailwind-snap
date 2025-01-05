@@ -14,7 +14,7 @@ export default {
 		// Text colors
 		{
 			pattern:
-				/text-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(600|700|800)/
+				/text-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(500|600|700|800)/
 		},
 		// Hover states
 		{

@@ -219,7 +219,7 @@
 							{#if isValid && nearestColor}
 								<div class="mb-6 grid grid-cols-2 gap-4">
 									<div>
-										<span class="mb-2 block text-sm font-medium text-gray-700">Input Color</span>
+										<div class="mb-2 block text-sm font-medium text-gray-700">Input Color</div>
 										<div
 											class="h-24 rounded-md shadow-sm"
 											style:background-color={inputColor}
@@ -228,9 +228,11 @@
 									</div>
 
 									<div>
-										<span class="mb-2 block text-sm font-medium text-gray-700"
-											>Nearest Tailwind Color</span
-										>
+										<div class="mb-2 block text-sm font-medium text-gray-700">
+											Nearest <span class="sm:inline md:hidden">TW</span><span
+												class="hidden md:inline">Tailwind</span
+											> Color
+										</div>
 										<div
 											class="h-24 rounded-md shadow-sm"
 											style:background-color={nearestColor.hex}
@@ -370,7 +372,7 @@
 								</div>
 
 								<div class="mt-8">
-									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-700">Top Matches</h2>
+									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-500">Top Matches</h2>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
 										{#each tailwindColors
 											.map( (color) => ({ ...color, distance: method === 'rgb' ? rgbDistance(inputColor, color.hex) : deltaE94(hexToLab(inputColor), hexToLab(color.hex)) }) )
@@ -394,7 +396,9 @@
 									</div>
 								</div>
 								<div class="mt-8">
-									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-700">Similar Hue</h2>
+									<h2 class="mb-4 text-lg font-semibold capitalize text-{$colorFamily}-500">
+										All {$colorFamily} Shades
+									</h2>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
 										{#each tailwindColors
 											.filter((c) => c.name.split('-')[0] === nearestColor.name.split('-')[0])
