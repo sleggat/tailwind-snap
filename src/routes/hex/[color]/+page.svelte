@@ -23,7 +23,7 @@
 	const data = $props();
 
 	// Remember data structure comes from +page.server.js return value
-	let inputColor = $state(data.data?.hex ?? '#000000');
+	let inputColor = $state(data.data?.hex ?? '#11d275');
 	let isValid = $state(true);
 	let nearestColor = $state(data.data?.nearest ?? null);
 	let copied = $state(false);
