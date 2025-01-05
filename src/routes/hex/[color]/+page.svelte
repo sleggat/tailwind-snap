@@ -33,7 +33,6 @@
 	const colorFamily = derived(currentColor, ($color) => {
 		const nearest = findNearestTailwindColor($color);
 		const family = nearest.name.split('-')[0];
-		console.log('Color family is:', family); // This will show the actual value
 		return family;
 	});
 
@@ -156,7 +155,7 @@
 									<input
 										id="hex-input"
 										type="text"
-										class="w-full rounded-md border border-gray-300 px-3 py-2 font-mono text-xl"
+										class="w-full rounded-md border border-gray-200 bg-{$colorFamily}-50 px-3 py-2 font-mono text-xl"
 										bind:value={inputColor}
 										placeholder="#000000"
 									/>
@@ -177,36 +176,6 @@
 									/>
 								</div>
 							</div>
-							<div class="mb-6">
-								<label class="mb-2 block text-sm font-medium text-gray-700" for="method">
-									Matching Algorithm
-								</label>
-								<div class="space-y-2">
-									<label class="flex items-center">
-										<input
-											type="radio"
-											bind:group={method}
-											value="lab"
-											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-										/>
-										<span class="ml-2 text-sm text-gray-600">
-											LAB (CIE94) - Most perceptually accurate
-										</span>
-									</label>
-
-									<label class="flex items-center">
-										<input
-											type="radio"
-											bind:group={method}
-											value="rgb"
-											class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-										/>
-										<span class="ml-2 text-sm text-gray-600">
-											RGB - Simple geometric distance
-										</span>
-									</label>
-								</div>
-							</div>
 
 							{#if !isValid}
 								<div
@@ -217,6 +186,36 @@
 							{/if}
 
 							{#if isValid && nearestColor}
+								<div class="mb-6">
+									<label class="mb-2 block text-sm font-medium text-gray-700" for="method">
+										Matching Algorithm
+									</label>
+									<div class="space-y-2">
+										<label class="flex items-center">
+											<input
+												type="radio"
+												bind:group={method}
+												value="lab"
+												class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+											/>
+											<span class="ml-2 text-sm text-gray-600">
+												LAB (CIE94) - Most perceptually accurate
+											</span>
+										</label>
+
+										<label class="flex items-center">
+											<input
+												type="radio"
+												bind:group={method}
+												value="rgb"
+												class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+											/>
+											<span class="ml-2 text-sm text-gray-600">
+												RGB - Simple geometric distance
+											</span>
+										</label>
+									</div>
+								</div>
 								<div class="mb-6 grid grid-cols-2 gap-4">
 									<div>
 										<div class="mb-2 block text-sm font-medium text-gray-700">Input Color</div>

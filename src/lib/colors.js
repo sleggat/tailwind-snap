@@ -438,70 +438,117 @@ export function getContrastRatio(hex1, hex2) {
 }
 
 export function describeColor(hex) {
-	const hsl = hexToHsl(hex);
-	const [h, s, l] = hsl;
+	try {
+		const hsl = hexToHsl(hex);
+		const [h, s, l] = hsl;
 
-	// Special cases first
-	if (l === 0) return 'This is black (0% lightness)';
-	if (l === 100) return 'This is white (100% lightness)';
-	if (s === 0) {
-		// Handle grays
-		return `This is a ${getLightnessDesc(l)} gray with ${Math.round(l)}% lightness`;
+		// console.log('HSL values:', { h, s, l }); // Debug log
+
+		// Special cases first
+		if (l === 0) return 'This is black (0% lightness)';
+		if (l === 100) return 'This is white (100% lightness)';
+		if (s < 1) {
+			// Changed from === 0 to < 1 for near-zero values
+			return `This is a ${getLightnessDesc(l)} gray with ${Math.round(l)}% lightness`;
+		}
+
+		function getHueDescription(hue) {
+			try {
+				const normalizedHue = ((hue % 360) + 360) % 360;
+				console.log('Normalized hue:', normalizedHue);
+
+				const hueRanges = [
+					// Reds (355-10)
+					{ range: [355, 360], name: 'red' },
+					{ range: [0, 10], name: 'red' },
+					{ range: [10, 20], name: 'scarlet' },
+
+					// Oranges (21-50)
+					{ range: [20, 30], name: 'orange-red' },
+					{ range: [30, 40], name: 'orange' },
+					{ range: [40, 50], name: 'golden-orange' },
+
+					// Yellows (51-70)
+					{ range: [50, 60], name: 'golden' },
+					{ range: [60, 70], name: 'yellow' },
+
+					// Yellow-Greens (71-110)
+					{ range: [70, 80], name: 'chartreuse' },
+					{ range: [88, 90], name: 'olive' },
+					{ range: [98, 100], name: 'lime' },
+					{ range: [100, 110], name: 'yellow-green' },
+
+					// Greens (111-170)
+					{ range: [110, 130], name: 'green' },
+					{ range: [130, 150], name: 'forest' },
+					{ range: [150, 170], name: 'emerald' },
+
+					// Blue-Greens (171-200)
+					{ range: [170, 180], name: 'mint' },
+					{ range: [180, 190], name: 'teal' },
+					{ range: [190, 200], name: 'turquoise' },
+
+					// Blues (201-260)
+					{ range: [200, 220], name: 'aqua' },
+					{ range: [220, 240], name: 'sky blue' },
+					{ range: [240, 250], name: 'blue' },
+					{ range: [250, 260], name: 'royal blue' },
+
+					// Purples (261-310)
+					{ range: [260, 270], name: 'indigo' },
+					{ range: [270, 280], name: 'violet' },
+					{ range: [280, 290], name: 'purple' },
+					{ range: [290, 300], name: 'plum' },
+					{ range: [300, 310], name: 'magenta' },
+
+					// Pinks/Reds (311-354)
+					{ range: [310, 325], name: 'hot pink' },
+					{ range: [325, 340], name: 'pink' },
+					{ range: [340, 354], name: 'rose' }
+				];
+
+				const matchedColor = hueRanges.find(
+					(range) => range.range[0] <= normalizedHue && normalizedHue <= range.range[1]
+				);
+
+				if (!matchedColor) {
+					console.log('No hue match found for:', normalizedHue); // Debug log
+				}
+
+				return matchedColor?.name ?? 'gray';
+			} catch (err) {
+				// console.error('Error in getHueDescription:', err);
+				return 'gray';
+			}
+		}
+
+		function getSaturationDesc(sat) {
+			if (sat < 5) return 'neutral';
+			if (sat < 15) return 'slightly saturated';
+			if (sat < 35) return 'muted';
+			if (sat < 65) return 'moderately saturated';
+			if (sat < 85) return 'vibrant';
+			return 'highly saturated';
+		}
+
+		function getLightnessDesc(light) {
+			if (light < 5) return 'nearly black';
+			if (light < 15) return 'very dark';
+			if (light < 35) return 'dark';
+			if (light > 95) return 'nearly white';
+			if (light > 85) return 'very light';
+			if (light > 65) return 'light';
+			if (light < 45) return 'deep';
+			return 'medium';
+		}
+
+		const primaryHue = getHueDescription(h);
+		const satDescription = getSaturationDesc(s);
+		const lightDescription = getLightnessDesc(l);
+
+		return `This is a ${lightDescription}, ${satDescription} ${primaryHue} with ${Math.round(s)}% saturation and ${Math.round(l)}% lightness`;
+	} catch (err) {
+		// console.error('Error in describeColor:', err);
+		return 'Color description unavailable';
 	}
-
-	function getHueDescription(hue) {
-		const normalizedHue = ((hue % 360) + 360) % 360;
-
-		const hueRanges = [
-			{ range: [355, 360], name: 'red' },
-			{ range: [0, 10], name: 'red' },
-			{ range: [11, 40], name: 'orange' },
-			{ range: [41, 55], name: 'amber' },
-			{ range: [56, 70], name: 'yellow' },
-			{ range: [71, 140], name: 'lime' },
-			{ range: [141, 160], name: 'green' },
-			{ range: [161, 180], name: 'emerald' },
-			{ range: [181, 200], name: 'teal' },
-			{ range: [201, 220], name: 'cyan' },
-			{ range: [221, 240], name: 'sky' },
-			{ range: [241, 260], name: 'blue' },
-			{ range: [261, 280], name: 'indigo' },
-			{ range: [281, 320], name: 'violet' },
-			{ range: [321, 330], name: 'purple' },
-			{ range: [331, 345], name: 'fuchsia' },
-			{ range: [346, 354], name: 'rose' }
-		];
-
-		const matchedColor = hueRanges.find(
-			(range) => range.range[0] <= normalizedHue && normalizedHue <= range.range[1]
-		);
-
-		return matchedColor?.name || 'gray';
-	}
-
-	function getSaturationDesc(sat) {
-		if (sat < 5) return 'neutral';
-		if (sat < 15) return 'slightly saturated';
-		if (sat < 35) return 'muted';
-		if (sat < 65) return 'moderately saturated';
-		if (sat < 85) return 'vibrant';
-		return 'highly saturated';
-	}
-
-	function getLightnessDesc(light) {
-		if (light < 5) return 'nearly black';
-		if (light < 15) return 'very dark';
-		if (light < 35) return 'dark';
-		if (light > 95) return 'nearly white';
-		if (light > 85) return 'very light';
-		if (light > 65) return 'light';
-		if (light < 45) return 'deep';
-		return 'medium';
-	}
-
-	const primaryHue = getHueDescription(h);
-	const satDescription = getSaturationDesc(s);
-	const lightDescription = getLightnessDesc(l);
-
-	return `This is a ${lightDescription}, ${satDescription} ${primaryHue} with ${Math.round(s)}% saturation and ${Math.round(l)}% lightness`;
 }
