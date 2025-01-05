@@ -2,3 +2,11 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+#colorPicker .color {
+	border-radius: 0.3rem !important;
+}
+#colorPicker label {
+	margin: 0;
+	padding: 0;
+}

@@ -159,21 +159,23 @@
 										bind:value={inputColor}
 										placeholder="#000000"
 									/>
-									<ColorPicker
-										bind:hex={inputColor}
-										isOpen={isPickerOpen}
-										position="responsive"
-										isError={!isValid}
-										format="hex"
-										isAlpha={false}
-										label=""
-										--input-size="38px"
-										on:change={(e) => {
-											if (e.detail && typeof e.detail === 'string') {
-												inputColor = e.detail;
-											}
-										}}
-									/>
+									<div id="colorPicker">
+										<ColorPicker
+											bind:hex={inputColor}
+											isOpen={isPickerOpen}
+											position="responsive"
+											isError={!isValid}
+											format="hex"
+											isAlpha={false}
+											label=""
+											--input-size="45px"
+											on:change={(e) => {
+												if (e.detail && typeof e.detail === 'string') {
+													inputColor = e.detail;
+												}
+											}}
+										/>
+									</div>
 								</div>
 							</div>
 
