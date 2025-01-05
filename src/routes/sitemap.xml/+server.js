@@ -1,20 +1,14 @@
 // src/routes/sitemap.xml/+server.js
-import { tailwindColors } from '$lib/colors';
+import { tailwindColors, HSLToHex } from '$lib/colors';
 
-// Add some popular web colors
-const popularColors = [
-	'#FFFFFF', // White
-	'#000000', // Black
-	'#FF0000', // Red
-	'#00FF00', // Green
-	'#0000FF', // Blue
-	'#FFFF00', // Yellow
-	'#FF00FF', // Magenta
-	'#00FFFF', // Cyan
-	'#808080', // Gray
-	'#FFA500' // Orange
-	// Add more as needed
-];
+const popularHues = [];
+for (let h = 0; h < 360; h += 5) {
+	// Every 5 degrees of hue
+	for (let l of [20, 40, 60, 80]) {
+		// Different lightness levels
+		popularHues.push(HSLToHex(h, 100, l));
+	}
+}
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
@@ -24,7 +18,7 @@ export async function GET({ url }) {
 		// All Tailwind colors
 		...tailwindColors.map((color) => color.hex.substring(1)),
 		// Popular web colors
-		...popularColors.map((color) => color.substring(1))
+		...popularHues.map((color) => color.substring(1))
 	];
 
 	const xml = `<?xml version="1.0" encoding="UTF-8" ?>
