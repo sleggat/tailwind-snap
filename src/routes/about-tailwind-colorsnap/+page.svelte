@@ -36,7 +36,7 @@
 	<div class="flex min-h-screen flex-col bg-violet-50">
 		<header class="bg-white shadow-sm">
 			<div class="mx-auto max-w-3xl px-4 py-6">
-				<h1 class="text-2xl font-bold text-gray-700">About Tailwind ColorSnap</h1>
+				<h1 class="text-2xl font-bold text-violet-800">About Tailwind ColorSnap</h1>
 			</div>
 		</header>
 
@@ -81,12 +81,34 @@
 			<div class="mx-auto max-w-3xl px-4 py-8">
 				<div class="rounded-lg bg-white shadow">
 					<div class="p-6 text-xl text-gray-600">
-						<h2 class="text-2xl font-medium">About Front&Back</h2>
-					</div>
-					<div class="p-6 text-xl text-gray-600">
-						<p class="">
-							Front&Back is an Aotearoa New Zealand-based graphic design studio, specialising in
-							bespoke websites, branding, and print design.
+						<h2 class="pb-6 text-2xl font-medium text-violet-800">About Front&Back</h2>
+						<p class="pb-6">
+							Front&Back is an Aotearoa New Zealand-based creative technology studio, specialising
+							in bespoke websites, branding, and print design. We bridge the gap between design and
+							development, crafting award-winning digital experiences that are both visually
+							striking and technically robust.
+						</p>
+
+						<p class="pb-6">
+							From custom web applications to innovative brand identities, we take a creative-first
+							approach while ensuring exceptional functionality. As our name suggests, we handle
+							both the frontend – the visual design and user experience your customers see – and the
+							backend – the sophisticated systems and code that power it all. This full-stack
+							expertise allows us to deliver cohesive solutions where design and technology work in
+							perfect harmony.
+						</p>
+
+						<p class="pb-6">
+							Founded by Steve Leggat, we've built our reputation on creating distinctive digital
+							products that combine bold creative vision with technical excellence. Whether it's
+							e-commerce platforms, content management systems, or brand design systems, we bring
+							innovative ideas to life across all digital and print channels.
+						</p>
+						<p>
+							<a
+								href="https://frontandback.co.nz"
+								class="font-medium text-blue-600 hover:text-blue-800">Visit our Portfolio</a
+							>
 						</p>
 					</div>
 				</div>
