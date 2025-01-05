@@ -449,9 +449,15 @@
 			<footer class="border-t border-gray-200 bg-white">
 				<div class="mx-auto max-w-3xl px-4 pt-12">
 					<p class="text-center text-sm text-gray-600">
-						Created by <a
+						<a
 							href="https://frontandback.co.nz"
-							class="font-medium text-blue-600 hover:text-blue-800">Front&Back</a
+							class="font-medium text-blue-600 hover:text-blue-800">Created by Front&Back</a
+						>
+						-
+						<a
+							href="/why-i-created-tailwind-colorsnap"
+							class="font-medium text-blue-600 hover:text-blue-800"
+							>Why I Created Tailwind ColorSnap</a
 						>
 					</p>
 					<div class="mx-auto w-20 py-12 text-center text-sm">
