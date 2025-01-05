@@ -524,8 +524,8 @@ export function describeColor(hex) {
 
 					// Yellow-Greens (71-110)
 					{ range: [70, 80], name: 'chartreuse' },
-					{ range: [88, 90], name: 'olive' },
-					{ range: [98, 100], name: 'lime' },
+					{ range: [80, 90], name: 'olive' },
+					{ range: [90, 100], name: 'lime' },
 					{ range: [100, 110], name: 'yellow-green' },
 
 					// Greens (111-170)
@@ -554,7 +554,7 @@ export function describeColor(hex) {
 					// Pinks/Reds (311-354)
 					{ range: [310, 325], name: 'hot pink' },
 					{ range: [325, 340], name: 'pink' },
-					{ range: [340, 354], name: 'rose' }
+					{ range: [340, 355], name: 'rose' }
 				];
 
 				const matchedColor = hueRanges.find(
