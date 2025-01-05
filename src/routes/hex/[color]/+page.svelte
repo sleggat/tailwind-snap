@@ -85,7 +85,7 @@
 	{#if nearestColor}
 		{@const pageTitle =
 			nearestColor.distance === 0
-				? `Color ${inputColor} is Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
+				? `Color ${inputColor} matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
 				: nearestColor.distance < 5
 					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
 					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
