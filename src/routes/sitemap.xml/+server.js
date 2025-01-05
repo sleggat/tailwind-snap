@@ -41,7 +41,7 @@ export async function GET({ url }) {
             <priority>1.0</priority>
         </url>
         <url>
-            <loc>${baseUrl}/why-i-created-tailwind-colorsnap</loc>
+            <loc>${baseUrl}/about-tailwind-colorsnap</loc>
             <changefreq>weekly</changefreq>
             <priority>1.0</priority>
         </url>

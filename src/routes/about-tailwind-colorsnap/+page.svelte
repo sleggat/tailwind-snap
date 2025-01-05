@@ -1,4 +1,4 @@
-<!-- src/routes/why-i-created-tailwind-colorsnap/+page.svelte -->
+<!-- src/routes/about-tailwind-colorsnap/+page.svelte -->
 <script>
 	import { goto } from '$app/navigation';
 	import { currentColor } from '$lib/stores';
@@ -7,10 +7,10 @@
 		goto(`/hex/${$currentColor.replace('#', '')}`);
 	}
 
-	let pageTitle = 'Why I Created Tailwind ColorSnap';
+	let pageTitle = 'About Tailwind ColorSnap';
 	let description =
 		'Tailwind ColorSnap: Match your brand colors with Tailwind CSS’s default palette effortlessly. Simplify design workflows and speed up development with this free tool for developers.';
-	let url = 'https://tailwindcolorsnap.frontandback.co.nz/why-i-created-tailwind-colorsnap';
+	let url = 'https://tailwindcolorsnap.frontandback.co.nz/about-tailwind-colorsnap';
 	let imageUrl = 'https://tailwindcolorsnap.frontandback.co.nz/og/fde047';
 </script>
 
@@ -36,7 +36,7 @@
 	<div class="flex min-h-screen flex-col bg-violet-50">
 		<header class="bg-white shadow-sm">
 			<div class="mx-auto max-w-3xl px-4 py-6">
-				<h1 class="text-2xl font-bold text-gray-700">Why I Created Tailwind ColorSnap</h1>
+				<h1 class="text-2xl font-bold text-gray-700">About Tailwind ColorSnap</h1>
 			</div>
 		</header>
 
@@ -78,7 +78,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="mt-8 text-center">
+			<div class="mb-12 mt-8 text-center">
 				<button onclick={goBack} class="font-medium text-blue-600 hover:text-blue-800">
 					Back to Tailwind ColorSnap
 				</button>

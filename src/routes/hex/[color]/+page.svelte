@@ -455,9 +455,8 @@
 						>
 						-
 						<a
-							href="/why-i-created-tailwind-colorsnap"
-							class="font-medium text-blue-600 hover:text-blue-800"
-							>Why I Created Tailwind ColorSnap</a
+							href="/about-tailwind-colorsnap"
+							class="font-medium text-blue-600 hover:text-blue-800">About Tailwind ColorSnap</a
 						>
 					</p>
 					<div class="mx-auto w-20 py-12 text-center text-sm">
