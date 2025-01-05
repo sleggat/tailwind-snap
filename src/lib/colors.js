@@ -524,9 +524,8 @@ export function describeColor(hex) {
 
 					// Yellow-Greens (71-110)
 					{ range: [70, 80], name: 'chartreuse' },
-					{ range: [80, 90], name: 'olive' },
-					{ range: [90, 100], name: 'lime' },
-					{ range: [100, 110], name: 'yellow-green' },
+					{ range: [80, 90], name: 'yellow-green' },
+					{ range: [90, 110], name: 'lime' },
 
 					// Greens (111-170)
 					{ range: [110, 130], name: 'green' },
