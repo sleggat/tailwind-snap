@@ -31,6 +31,9 @@
 	let isPickerOpen = $state(false);
 	let method = $state('lab');
 	let colorDescription = $derived(nearestColor && describeColor(inputColor));
+	let contrastWhite = $derived(getContrastRatio(inputColor, '#ffffff').toFixed(2));
+	let contrastBlack = $derived(getContrastRatio(inputColor, '#000000').toFixed(2));
+
 	const colorFamily = derived(currentColor, ($color) => {
 		const nearest = findNearestTailwindColor($color);
 		const family = nearest.name.split('-')[0];
@@ -82,7 +85,7 @@
 	}
 
 	// Define config templates
-	const jsConfig = `module.exports = {
+	let jsConfig = $derived(`module.exports = {
   theme: {
     extend: {
       colors: {
@@ -90,9 +93,9 @@
       }
     }
   }
-}`;
+}`);
 
-	const nextConfig = `import type { Config } from 'tailwindcss'
+	let nextConfig = $derived(`import type { Config } from 'tailwindcss'
 
 const config: Config = {
   theme: {
@@ -102,9 +105,9 @@ const config: Config = {
       }
     }
   }
-}`;
+}`);
 
-	const svelteConfig = `/** @type {import('tailwindcss').Config} */
+	let svelteConfig = $derived(`/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
@@ -115,7 +118,7 @@ export default {
     }
   },
   plugins: []
-}`;
+}`);
 
 	async function copyConfig(code, type) {
 		try {
@@ -315,7 +318,7 @@ export default {
 										aria-expanded={expandedAnalysis}
 									>
 										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
-											Color Analysis & Technical Details
+											Input Color Analysis & Technical Details
 										</h2>
 										<svg
 											class="h-5 w-5 text-gray-500 transition-transform duration-200"
@@ -406,16 +409,24 @@ export default {
 																	.join(', ')}
 															</li>
 															<li>
-																Contrast ratio with white: {getContrastRatio(
-																	inputColor,
-																	'#ffffff'
-																).toFixed(2)}
+																Contrast ratio against white: {contrastWhite}
+																{#if Number(contrastWhite) < 3}
+																	<span class="ml-1 text-red-600">(very poor contrast)</span>
+																{:else if Number(contrastWhite) < 4.5}
+																	<span class="ml-1 text-amber-600"
+																		>(poor contrast - avoid using for text)</span
+																	>
+																{/if}
 															</li>
 															<li>
-																Contrast ratio with black: {getContrastRatio(
-																	inputColor,
-																	'#000000'
-																).toFixed(2)}
+																Contrast ratio against black: {contrastBlack}
+																{#if Number(contrastBlack) < 3}
+																	<span class="ml-1 text-red-600">(very poor contrast)</span>
+																{:else if Number(contrastBlack) < 4.5}
+																	<span class="ml-1 text-amber-600"
+																		>(poor contrast - avoid using for text)</span
+																	>
+																{/if}
 															</li>
 														</ul>
 													</div>
@@ -457,17 +468,17 @@ export default {
 													<div class="space-y-4">
 														<div class="mt-4 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800">
 															{inputColor} is an exact match for Tailwind's {nearestColor.name} color,
-															no need to add a custom color to your Tailwind configuration.
+															no need to add a custom color to your Tailwind (&lt;v4.0) configuration.
 														</div>
 													</div>
 												{:else}
 													<div class="mt-4">
 														<div class="space-y-4">
 															<p class="mb-4 text-gray-600">
-																Want to use this hex color as a custom Tailwind CSS color? Here's
-																how to add it to your project's configuration. After adding, you can
-																use classes like <code class="inline-block rounded bg-gray-100 px-1"
-																	>bg-custom</code
+																Want to use this hex color as a custom Tailwind (&lt;v4.0) color?
+																Here's how to add it to your project's configuration. After adding,
+																you can use classes like <code
+																	class="inline-block rounded bg-gray-100 px-1">bg-custom</code
 																>,
 																<code class="inline-block rounded bg-gray-100 px-1"
 																	>text-custom</code
@@ -476,6 +487,7 @@ export default {
 																	>border-custom</code
 																> in your code.
 															</p>
+
 															<!-- JavaScript/Node.js config -->
 															<div class="rounded-md bg-gray-50 p-4">
 																<div class="flex items-center justify-between">
