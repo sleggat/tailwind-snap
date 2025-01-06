@@ -189,7 +189,7 @@
 						</svg></a
 					>
 				</div>
-				<p class=" my-2 text-center text-xs text-gray-400">
+				<p class=" my-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
 					Looking for more? Check out
 					<a
 						href="https://tailwindcss.com"
@@ -199,7 +199,7 @@
 					>
 					for the complete framework.
 				</p>
-				<p class="mb-8 mt-2 text-center text-xs text-gray-400">
+				<p class="mb-8 mt-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
 					Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by Tailwind CSS or
 					Tailwind Labs Inc.
 				</p>

@@ -505,7 +505,6 @@ export function describeColor(hex) {
 		function getHueDescription(hue) {
 			try {
 				const normalizedHue = ((hue % 360) + 360) % 360;
-				console.log('Normalized hue:', normalizedHue);
 
 				const hueRanges = [
 					// Reds (355-10)
@@ -519,7 +518,7 @@ export function describeColor(hex) {
 					{ range: [40, 50], name: 'golden-orange' },
 
 					// Yellows (51-70)
-					{ range: [50, 60], name: 'golden' },
+					{ range: [50, 60], name: 'golden-yellow' },
 					{ range: [60, 70], name: 'yellow' },
 
 					// Yellow-Greens (71-110)

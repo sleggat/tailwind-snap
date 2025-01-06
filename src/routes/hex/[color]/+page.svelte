@@ -373,7 +373,7 @@
 								</div>
 
 								<div class="mt-8">
-									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-500">Top Matches</h2>
+									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-600">Top Matches</h2>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
 										{#each tailwindColors
 											.map( (color) => ({ ...color, distance: method === 'rgb' ? rgbDistance(inputColor, color.hex) : deltaE94(hexToLab(inputColor), hexToLab(color.hex)) }) )
@@ -397,7 +397,7 @@
 									</div>
 								</div>
 								<div class="mt-8">
-									<h2 class="mb-4 text-lg font-semibold capitalize text-{$colorFamily}-500">
+									<h2 class="mb-4 text-lg font-semibold capitalize text-{$colorFamily}-600">
 										All {$colorFamily} Shades
 									</h2>
 									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
@@ -411,25 +411,6 @@
 											>
 												<div
 													class="mb-2 h-16 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
-													style:background-color={color.hex}
-												></div>
-												<code class="text-sm text-gray-600">{color.name}</code>
-											</a>
-										{/each}
-									</div>
-								</div>
-
-								<div class="mt-8 hidden">
-									<h2 class="mb-4 text-lg font-semibold text-gray-900">Popular Tailwind Colors</h2>
-									<div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
-										{#each ['red', 'blue', 'green', 'yellow', 'purple', 'pink', 'gray', 'indigo'].map( (color) => tailwindColors.find((c) => c.name === `${color}-500`) ) as color}
-											<a
-												href="/hex/{color.hex.substring(1)}"
-												class="group block"
-												onclick={(e) => handleColorClick(e, color.hex)}
-											>
-												<div
-													class="mb-2 h-12 rounded-md shadow-sm ring-blue-500 group-hover:ring-2"
 													style:background-color={color.hex}
 												></div>
 												<code class="text-sm text-gray-600">{color.name}</code>
@@ -522,7 +503,7 @@
 							</svg></a
 						>
 					</div>
-					<p class=" my-2 text-center text-xs text-gray-400">
+					<p class=" my-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
 						Looking for more? Check out
 						<a
 							href="https://tailwindcss.com"
@@ -532,7 +513,7 @@
 						>
 						for the complete framework.
 					</p>
-					<p class="mb-8 mt-2 text-center text-xs text-gray-400">
+					<p class="mb-8 mt-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
 						Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by Tailwind CSS or
 						Tailwind Labs Inc.
 					</p>
