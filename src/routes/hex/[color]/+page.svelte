@@ -18,7 +18,8 @@
 	import { derived } from 'svelte/store';
 	import { currentColor } from '$lib/stores';
 
-	let expanded = $state(false);
+	let expandedAnalysis = $state(false);
+	let expandedCode = $state(false);
 
 	const data = $props();
 
@@ -78,6 +79,52 @@
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
 		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
+	}
+
+	// Define config templates
+	const jsConfig = `module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        custom: '${inputColor}'
+      }
+    }
+  }
+}`;
+
+	const nextConfig = `import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  theme: {
+    extend: {
+      colors: {
+        custom: '${inputColor}'
+      }
+    }
+  }
+}`;
+
+	const svelteConfig = `/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./src/**/*.{html,js,svelte,ts}'],
+  theme: {
+    extend: {
+      colors: {
+        custom: '${inputColor}'
+      }
+    }
+  },
+  plugins: []
+}`;
+
+	async function copyConfig(code, type) {
+		try {
+			await navigator.clipboard.writeText(code);
+			toast.success(`${type} configuration copied to clipboard`);
+		} catch (err) {
+			toast.error('Failed to copy configuration');
+			console.error('Copy failed:', err);
+		}
 	}
 </script>
 
@@ -263,16 +310,16 @@
 
 								<div class="mt-8">
 									<button
-										onclick={() => (expanded = !expanded)}
+										onclick={() => (expandedAnalysis = !expandedAnalysis)}
 										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
-										aria-expanded={expanded}
+										aria-expanded={expandedAnalysis}
 									>
 										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
 											Color Analysis & Technical Details
 										</h2>
 										<svg
 											class="h-5 w-5 text-gray-500 transition-transform duration-200"
-											class:rotate-180={expanded}
+											class:rotate-180={expandedAnalysis}
 											fill="none"
 											viewBox="0 0 24 24"
 											stroke="currentColor"
@@ -286,7 +333,7 @@
 										</svg>
 									</button>
 
-									{#if expanded}
+									{#if expandedAnalysis}
 										<div class="mt-2 rounded-lg bg-white p-4 shadow-sm" transition:slide>
 											<div class="prose prose-sm">
 												{#if nearestColor}
@@ -364,7 +411,165 @@
 																	'#ffffff'
 																).toFixed(2)}
 															</li>
+															<li>
+																Contrast ratio with black: {getContrastRatio(
+																	inputColor,
+																	'#000000'
+																).toFixed(2)}
+															</li>
 														</ul>
+													</div>
+												{/if}
+											</div>
+										</div>
+									{/if}
+								</div>
+
+								<div class="mt-8">
+									<button
+										onclick={() => (expandedCode = !expandedCode)}
+										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
+										aria-expanded={expandedCode}
+									>
+										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
+											Integrate this Hex Color into Your Project
+										</h2>
+										<svg
+											class="h-5 w-5 text-gray-500 transition-transform duration-200"
+											class:rotate-180={expandedCode}
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M19 9l-7 7-7-7"
+											/>
+										</svg>
+									</button>
+
+									{#if expandedCode}
+										<div class="mt-2 rounded-lg bg-white p-4 shadow-sm" transition:slide>
+											<div class="prose prose-sm">
+												{#if nearestColor && nearestColor.distance === 0}
+													<div class="space-y-4">
+														<div class="mt-4 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800">
+															{inputColor} is an exact match for Tailwind's {nearestColor.name} color,
+															no need to add a custom color to your Tailwind configuration.
+														</div>
+													</div>
+												{:else}
+													<div class="mt-4">
+														<div class="space-y-4">
+															<p class="mb-4 text-gray-600">
+																Want to use this hex color as a custom Tailwind CSS color? Here's
+																how to add it to your project's configuration. After adding, you can
+																use classes like <code class="inline-block rounded bg-gray-100 px-1"
+																	>bg-custom</code
+																>,
+																<code class="inline-block rounded bg-gray-100 px-1"
+																	>text-custom</code
+																>, and
+																<code class="inline-block rounded bg-gray-100 px-1"
+																	>border-custom</code
+																> in your code.
+															</p>
+															<!-- JavaScript/Node.js config -->
+															<div class="rounded-md bg-gray-50 p-4">
+																<div class="flex items-center justify-between">
+																	<p class="text-sm font-medium text-gray-700">
+																		tailwind.config.js
+																	</p>
+																	<button
+																		onclick={() => copyConfig(jsConfig, 'JavaScript')}
+																		class="text-xs text-blue-600 hover:text-blue-800"
+																	>
+																		Copy code
+																	</button>
+																</div>
+																<pre>
+{`module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        custom: '${inputColor}'
+      }
+    }
+  }
+}`}</pre>
+															</div>
+
+															<!-- Next.js specific -->
+															<div class="rounded-md bg-gray-50 p-4">
+																<div class="flex items-center justify-between">
+																	<p class="text-sm font-medium text-gray-700">
+																		Next.js (tailwind.config.ts)
+																	</p>
+																	<button
+																		onclick={() => copyConfig(nextConfig, 'Next.js')}
+																		class="text-xs text-blue-600 hover:text-blue-800"
+																	>
+																		Copy code
+																	</button>
+																</div>
+																<pre>
+{`import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  theme: {
+    extend: {
+      colors: {
+        custom: '${inputColor}'
+      }
+    }
+  }
+}`}</pre>
+															</div>
+
+															<!-- SvelteKit -->
+															<div class="rounded-md bg-gray-50 p-4">
+																<div class="flex items-center justify-between">
+																	<p class="text-sm font-medium text-gray-700">
+																		SvelteKit (tailwind.config.js)
+																	</p>
+																	<button
+																		onclick={() => copyConfig(svelteConfig, 'SvelteKit')}
+																		class="text-xs text-blue-600 hover:text-blue-800"
+																	>
+																		Copy code
+																	</button>
+																</div>
+																<pre>
+{`/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./src/**/*.{html,js,svelte,ts}'],
+  theme: {
+    extend: {
+      colors: {
+        custom: '${inputColor}'
+      }
+    }
+  },
+  plugins: []
+}`}</pre>
+															</div>
+
+															<!-- Usage example -->
+															<div class="mt-2 text-sm text-gray-600">
+																<p>Then use in your code as:</p>
+																<code class="mt-1 block rounded bg-gray-100 px-2 py-1">
+																	bg-custom text-custom border-custom
+																</code>
+																<div
+																	class="mt-4 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800"
+																>
+																	<strong>Note:</strong> After adding to your config, you'll need to
+																	restart your development server for the changes to take effect.
+																</div>
+															</div>
+														</div>
 													</div>
 												{/if}
 											</div>
