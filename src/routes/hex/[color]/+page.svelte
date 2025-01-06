@@ -90,7 +90,7 @@
 					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
 					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
 
-		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class. ${inputColor} matches closest to Tailwind's ${nearestColor.name}.`}
+		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class. ${colorDescription}.`}
 		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '')}`}
 		{@const imageUrl = `https://tailwindcolorsnap.frontandback.co.nz/og/${inputColor.replace('#', '')}`}
 
