@@ -510,7 +510,8 @@ export default {
 										aria-expanded={expandedCode}
 									>
 										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
-											Integrate this Hex Color into Your Project
+											Integrate this {tailwindVersion === 'v4' ? 'OKLCH Color' : 'Hex Color'} into Your
+											Project
 										</h2>
 										<svg
 											class="h-5 w-5 text-gray-500 transition-transform duration-200"
@@ -560,9 +561,9 @@ export default {
 																</div>
 															{:else}
 																<p class="mb-4 text-gray-600">
-																	Want to use this hex color as a custom Tailwind (&lt;v4.0) color?
-																	Here's how to add it to your project's configuration. After
-																	adding, you can use classes like
+																	Want to use this hex value as a custom Tailwind color? Here's how
+																	to add it to your project's configuration. After adding, you can
+																	use classes like
 																	<code class="inline-block rounded bg-gray-100 px-1"
 																		>bg-custom</code
 																	>,
