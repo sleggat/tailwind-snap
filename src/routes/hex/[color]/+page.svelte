@@ -218,7 +218,7 @@ export default {
 			<header class="bg-white shadow-sm">
 				<div class="mx-auto max-w-3xl px-4 py-6">
 					<div class="flex items-center gap-3">
-						<h1 class="text-2xl font-bold text-{$colorFamily}-700">Tailwind ColorSnap</h1>
+						<h1 class="text-4xl font-medium text-{$colorFamily}-700">Tailwind ColorSnap</h1>
 						<span
 							class="whitespace-nowrap rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-500"
 						>
@@ -229,7 +229,7 @@ export default {
 							>
 						</span>
 					</div>
-					<p class="mt-2 text-gray-600">
+					<h2 class="mt-2 text-lg text-gray-600">
 						Convert any hex color to its closest
 						<a
 							href="https://tailwindcss.com/docs/customizing-colors"
@@ -239,7 +239,7 @@ export default {
 						>
 						color class or OKLCH values. Perfect for developers matching designs to Tailwind's color
 						palette.
-					</p>
+					</h2>
 				</div>
 			</header>
 

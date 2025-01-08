@@ -36,7 +36,7 @@
 	<div class="flex min-h-screen flex-col bg-violet-50">
 		<header class="bg-white shadow-sm">
 			<div class="mx-auto max-w-3xl px-4 py-6">
-				<h1 class="text-2xl font-bold text-violet-800">About Tailwind ColorSnap</h1>
+				<h1 class="text-4xl font-medium text-violet-800">About Tailwind ColorSnap</h1>
 			</div>
 		</header>
 
@@ -55,7 +55,7 @@
 							While adding Custom Colors to Tailwind is fairly straightforward, it’s often easier
 							and cleaner, promoting consistency and maintainability, when you stick with Tailwind’s
 							awesome palette of base colors. That’s why I put together this utility website to
-							match brand colors with their closest Tailwind color class.
+							match brand colors with their closest Tailwind CSS color class or OKLCH value.
 						</p>
 						<p class="mb-4">
 							I hope you find it useful! If you have any feedback or suggestions, please feel free
