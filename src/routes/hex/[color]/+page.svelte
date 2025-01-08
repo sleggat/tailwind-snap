@@ -187,7 +187,7 @@ export default {
 					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
 					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
 
-		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class. ${colorDescription}.`}
+		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class or OKLCH value. ${colorDescription}.`}
 		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '')}`}
 		{@const imageUrl = `https://tailwindcolorsnap.frontandback.co.nz/og/${inputColor.replace('#', '')}`}
 
