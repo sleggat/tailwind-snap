@@ -273,8 +273,6 @@ export default {
 											bind:hex={inputColor}
 											isOpen={isPickerOpen}
 											position="responsive"
-											isError={!isValid}
-											format="hex"
 											isAlpha={false}
 											label=""
 											--input-size="45px"
@@ -756,18 +754,16 @@ export default {
 						>
 					</div>
 					<p class=" my-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
-						Looking for more? Check out
-						<a
+						Convert colors from HEX, RGB, and HSV to closest Tailwind CSS Color and the newer OKLCH
+						color space.
+					</p>
+					<p class="mb-8 mt-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
+						Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by <a
 							href="https://tailwindcss.com"
 							class="font-medium text-blue-600 hover:text-blue-800"
 							target="_blank"
 							rel="noopener">Tailwind CSS</a
-						>
-						for the complete framework.
-					</p>
-					<p class="mb-8 mt-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
-						Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by Tailwind CSS or
-						Tailwind Labs Inc.
+						> or Tailwind Labs Inc.
 					</p>
 				</div>
 			</footer>
