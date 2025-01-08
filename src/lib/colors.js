@@ -461,21 +461,41 @@ export function hexToHsl(hex) {
 }
 
 export function hexToOklch(hex) {
-	// First convert hex to RGB
-	const [r, g, b] = hexToRgb(hex);
-	// Convert RGB values to 0-1 range
-	const rr = r / 255;
-	const gg = g / 255;
-	const bb = b / 255;
+	// Convert hex to RGB
+	const rgb = hexToRgb(hex);
 
-	// Convert to OKLCH (simplified version - you might want a more accurate converter)
-	// This is a basic conversion - you might want to use a color conversion library
-	const l = 0.4122214708 * rr + 0.5363325363 * gg + 0.0514459929 * bb;
-	const m = 0.2119034982 * rr + 0.6806995451 * gg + 0.1073969566 * bb;
-	const s = 0.0883024619 * rr + 0.2817188376 * gg + 0.6299787005 * bb;
+	// Convert RGB (0-255) to linear RGB (0-1)
+	const linearRGB = rgb.map((val) => {
+		const srgb = val / 255;
+		return srgb <= 0.04045 ? srgb / 12.92 : Math.pow((srgb + 0.055) / 1.055, 2.4);
+	});
 
-	// Return OKLCH string format
-	return `oklch(${l.toFixed(3)} ${m.toFixed(3)} ${s.toFixed(3)})`;
+	// Convert to LMS
+	const [lr, mg, sb] = linearRGB;
+	const l = 0.4122214708 * lr + 0.5363325363 * mg + 0.0514459929 * sb;
+	const m = 0.2119034982 * lr + 0.6806995451 * mg + 0.1073969566 * sb;
+	const s = 0.0883024619 * lr + 0.2817188376 * mg + 0.6299787005 * sb;
+
+	// Convert LMS to Lab-ish
+	const l_ = Math.cbrt(Math.max(l, 0));
+	const m_ = Math.cbrt(Math.max(m, 0));
+	const s_ = Math.cbrt(Math.max(s, 0));
+
+	// Convert to OKLab
+	const L = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
+	const a = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
+	const b = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
+
+	// Convert OKLab to OKLCH
+	const C = Math.sqrt(a * a + b * b);
+	const H = Math.atan2(b, a);
+
+	// Format values
+	const L_percent = Math.round(L * 100);
+	const C_val = C.toFixed(3);
+	const H_val = (H / (2 * Math.PI) + 1) % 1;
+
+	return `oklch(${L_percent}% ${C_val} ${H_val.toFixed(3)})`;
 }
 
 export function getRandomHexColor() {

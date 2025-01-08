@@ -8,10 +8,10 @@
 		deltaE94,
 		hexToRgb,
 		hexToHsl,
-		hexToOklch,
 		getContrastRatio,
 		describeColor
 	} from '$lib/colors';
+	import { oklch, formatCss, parse } from 'culori';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
@@ -48,6 +48,15 @@
 		const family = nearest.name.split('-')[0];
 		return family;
 	});
+
+	function hexToOklch(hex) {
+		const color = oklch(hex);
+		const L = (color.l * 100).toFixed(2); // Lightness to 2 decimal places
+		const C = color.c.toFixed(4); // Chroma to 4 decimal places
+		const H = color.h.toFixed(2); // Keep hue in degrees, 2 decimal places
+
+		return `oklch(${L}% ${C} ${H})`;
+	}
 
 	// Update effect to use selected method
 	$effect(() => {
