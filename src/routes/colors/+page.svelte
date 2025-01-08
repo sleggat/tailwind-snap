@@ -30,7 +30,7 @@
 	/>
 </svelte:head>
 <div class="min-h-screen bg-violet-50">
-	<header class="bg-white shadow-sm">
+	<header class="">
 		<div class="mx-auto max-w-7xl px-4 py-6">
 			<h1 class="font-medim text-4xl text-gray-900">Tailwind CSS Colors</h1>
 			<p class="mt-2 text-lg text-gray-600">
@@ -84,7 +84,7 @@
 		</div>
 	</main>
 
-	<footer class="border-t border-gray-200 bg-white">
+	<footer class="">
 		<div class="mx-auto max-w-3xl px-4 pt-12">
 			<p class="text-center text-sm text-gray-600">
 				Created by <a

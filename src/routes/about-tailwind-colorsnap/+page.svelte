@@ -34,7 +34,7 @@
 </svelte:head>
 <div class="flex min-h-screen flex-col bg-violet-50">
 	<div class="flex min-h-screen flex-col bg-violet-50">
-		<header class="bg-white shadow-sm">
+		<header class="">
 			<div class="mx-auto max-w-3xl px-4 py-6">
 				<h1 class="text-4xl font-medium text-violet-800">About Tailwind ColorSnap</h1>
 			</div>
@@ -120,7 +120,7 @@
 			</div>
 		</main>
 
-		<footer class="border-t border-gray-200 bg-white">
+		<footer class="">
 			<div class="mx-auto max-w-3xl px-4 pt-12">
 				<p class="text-center text-sm text-gray-600">
 					Created by <a
