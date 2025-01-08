@@ -754,8 +754,7 @@ export default {
 						>
 					</div>
 					<p class=" my-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
-						Convert colors from HEX, RGB, and HSV to closest Tailwind CSS Color and the newer OKLCH
-						color space.
+						Convert and Match HEX, RGB, and HSV to Tailwind CSS and OKLCH Colors
 					</p>
 					<p class="mb-8 mt-2 text-center text-xs text-gray-400 contrast-more:text-gray-900">
 						Tailwind ColorSnap is not affiliated with, endorsed by, or sponsored by <a
