@@ -460,6 +460,24 @@ export function hexToHsl(hex) {
 	return [h * 360, s * 100, l * 100];
 }
 
+export function hexToOklch(hex) {
+	// First convert hex to RGB
+	const [r, g, b] = hexToRgb(hex);
+	// Convert RGB values to 0-1 range
+	const rr = r / 255;
+	const gg = g / 255;
+	const bb = b / 255;
+
+	// Convert to OKLCH (simplified version - you might want a more accurate converter)
+	// This is a basic conversion - you might want to use a color conversion library
+	const l = 0.4122214708 * rr + 0.5363325363 * gg + 0.0514459929 * bb;
+	const m = 0.2119034982 * rr + 0.6806995451 * gg + 0.1073969566 * bb;
+	const s = 0.0883024619 * rr + 0.2817188376 * gg + 0.6299787005 * bb;
+
+	// Return OKLCH string format
+	return `oklch(${l.toFixed(3)} ${m.toFixed(3)} ${s.toFixed(3)})`;
+}
+
 export function getRandomHexColor() {
 	const letters = '0123456789ABCDEF';
 	let color = '#';

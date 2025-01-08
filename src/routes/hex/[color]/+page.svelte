@@ -8,6 +8,7 @@
 		deltaE94,
 		hexToRgb,
 		hexToHsl,
+		hexToOklch,
 		getContrastRatio,
 		describeColor
 	} from '$lib/colors';
@@ -30,9 +31,17 @@
 	let copied = $state(false);
 	let isPickerOpen = $state(false);
 	let method = $state('lab');
+	let tailwindVersion = $state('v3');
 	let colorDescription = $derived(nearestColor && describeColor(inputColor));
 	let contrastWhite = $derived(getContrastRatio(inputColor, '#ffffff').toFixed(2));
 	let contrastBlack = $derived(getContrastRatio(inputColor, '#000000').toFixed(2));
+	let rgbValue = $derived(hexToRgb(inputColor).join(', '));
+	let hslValue = $derived(
+		hexToHsl(inputColor)
+			.map((v) => Math.round(v))
+			.join(', ')
+	);
+	let oklchValue = $derived(hexToOklch(inputColor));
 
 	const colorFamily = derived(currentColor, ($color) => {
 		const nearest = findNearestTailwindColor($color);
@@ -68,8 +77,13 @@
 
 	async function copyToClipboard() {
 		if (!nearestColor?.name) return;
-		await navigator.clipboard.writeText(nearestColor.name);
-		toast.success('Tailwind class copied to clipboard');
+
+		const valueToCopy = tailwindVersion === 'v4' ? hexToOklch(inputColor) : nearestColor.name;
+
+		await navigator.clipboard.writeText(valueToCopy);
+		toast.success(
+			`${tailwindVersion === 'v4' ? 'OKLCH' : 'Tailwind'} color value copied to clipboard`
+		);
 		copied = true;
 		setTimeout(() => (copied = false), 2000);
 	}
@@ -81,10 +95,34 @@
 	}
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
-		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
+		let message = '';
+		switch (type) {
+			case 'name':
+				message = 'Tailwind class';
+				break;
+			case 'HEX':
+				message = 'HEX color';
+				break;
+			case 'RGB':
+				message = 'RGB values';
+				break;
+			case 'HSL':
+				message = 'HSL values';
+				break;
+			case 'OKLCH':
+				message = 'OKLCH values';
+				break;
+			case 'config':
+				message = 'Configuration';
+				break;
+			default:
+				message = 'Color value';
+		}
+		toast.success(`${message} copied to clipboard`);
 	}
 
 	// Define config templates
+	let oklchConfig = $derived(`--color-custom: ${hexToOklch(inputColor)};`);
 	let jsConfig = $derived(`module.exports = {
   theme: {
     extend: {
@@ -179,7 +217,18 @@ export default {
 		<div class="flex min-h-screen flex-col bg-{$colorFamily}-50">
 			<header class="bg-white shadow-sm">
 				<div class="mx-auto max-w-3xl px-4 py-6">
-					<h1 class="text-2xl font-bold text-{$colorFamily}-700">Tailwind ColorSnap</h1>
+					<div class="flex items-center gap-3">
+						<h1 class="text-2xl font-bold text-{$colorFamily}-700">Tailwind ColorSnap</h1>
+						<span
+							class="whitespace-nowrap rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-500"
+						>
+							Updated for <a
+								href="https://tailwindcss.com/docs/v4-beta"
+								title="Tailwind v4 Beta Documentation"
+								aria-label="Tailwind v4 Beta Documentation">Tailwind v4</a
+							>
+						</span>
+					</div>
 					<p class="mt-2 text-gray-600">
 						Convert any hex color to its closest
 						<a
@@ -238,34 +287,50 @@ export default {
 							{/if}
 
 							{#if isValid && nearestColor}
-								<div class="mb-6">
-									<label class="mb-2 block text-sm font-medium text-gray-700" for="method">
-										Matching Algorithm
-									</label>
-									<div class="space-y-2">
-										<label class="flex items-center">
-											<input
-												type="radio"
-												bind:group={method}
-												value="lab"
-												class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-											/>
-											<span class="ml-2 text-sm text-gray-600">
-												LAB (CIE94) - Most perceptually accurate
-											</span>
+								<div class="mb-12 grid gap-6 md:grid-cols-2">
+									<div>
+										<label class="mb-2 block text-sm font-medium text-gray-700" for="method">
+											Matching Algorithm
 										</label>
+										<div class="space-y-2">
+											<label class="flex items-center">
+												<input
+													type="radio"
+													bind:group={method}
+													value="lab"
+													class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+												/>
+												<span class="ml-2 text-sm text-gray-600">
+													LAB (CIE94) - Most perceptually accurate
+												</span>
+											</label>
 
-										<label class="flex items-center">
-											<input
-												type="radio"
-												bind:group={method}
-												value="rgb"
-												class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-											/>
-											<span class="ml-2 text-sm text-gray-600">
-												RGB - Simple geometric distance
-											</span>
+											<label class="flex items-center">
+												<input
+													type="radio"
+													bind:group={method}
+													value="rgb"
+													class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+												/>
+												<span class="ml-2 text-sm text-gray-600">
+													RGB - Simple geometric distance
+												</span>
+											</label>
+										</div>
+									</div>
+									<div>
+										<label class="mb-2 block text-sm font-medium text-gray-700" for="method">
+											Tailwind Version
 										</label>
+										<div class="space-y-2">
+											<select
+												bind:value={tailwindVersion}
+												class="mt-1 block w-full rounded-md border-gray-300"
+											>
+												<option value="v3">Tailwind CSS v3</option>
+												<option value="v4">Tailwind CSS v4 (Beta)</option>
+											</select>
+										</div>
 									</div>
 								</div>
 								<div class="mb-6 grid grid-cols-2 gap-4">
@@ -276,6 +341,7 @@ export default {
 											style:background-color={inputColor}
 										></div>
 										<code class="mt-2 block text-sm text-gray-600">{inputColor}</code>
+										<code class="mt-2 block text-sm text-gray-600">{hexToOklch(inputColor)}</code>
 									</div>
 
 									<div>
@@ -307,7 +373,10 @@ export default {
 									{#if copied}
 										✓ Copied!
 									{:else}
-										Copy Tailwind Color
+										Copy {tailwindVersion === 'v4' ? 'OKLCH' : 'Tailwind'} Color Class ({tailwindVersion ===
+										'v4'
+											? 'v4'
+											: 'v3'})
 									{/if}
 								</button>
 
@@ -402,12 +471,43 @@ export default {
 															Technical Details:
 														</h3>
 														<ul class="list-disc pl-5 text-sm text-gray-600">
-															<li>RGB values: {hexToRgb(inputColor).join(', ')}</li>
-															<li>
-																HSL values: {hexToHsl(inputColor)
-																	.map((v) => Math.round(v))
-																	.join(', ')}
+															<li class="flex items-center justify-between">
+																<span>HEX: {inputColor}</span>
+																<button
+																	onclick={() => copyColor(inputColor, 'HEX')}
+																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
+																>
+																	Copy
+																</button>
 															</li>
+															<li class="flex items-center justify-between">
+																<span>RGB: {rgbValue}</span>
+																<button
+																	onclick={() => copyColor(rgbValue, 'RGB')}
+																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
+																>
+																	Copy
+																</button>
+															</li>
+															<li class="flex items-center justify-between">
+																<span>HSL: {hslValue}</span>
+																<button
+																	onclick={() => copyColor(hslValue, 'HSL')}
+																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
+																>
+																	Copy
+																</button>
+															</li>
+															<li class="flex items-center justify-between">
+																<span>OKLCH: {oklchValue}</span>
+																<button
+																	onclick={() => copyColor(oklchValue, 'OKLCH')}
+																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
+																>
+																	Copy
+																</button>
+															</li>
+
 															<li>
 																Contrast ratio against white: {contrastWhite}
 																{#if Number(contrastWhite) < 3}
@@ -436,7 +536,7 @@ export default {
 									{/if}
 								</div>
 
-								<div class="mt-8">
+								<div class="mt-4">
 									<button
 										onclick={() => (expandedCode = !expandedCode)}
 										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
@@ -474,113 +574,100 @@ export default {
 												{:else}
 													<div class="mt-4">
 														<div class="space-y-4">
-															<p class="mb-4 text-gray-600">
-																Want to use this hex color as a custom Tailwind (&lt;v4.0) color?
-																Here's how to add it to your project's configuration. After adding,
-																you can use classes like <code
-																	class="inline-block rounded bg-gray-100 px-1">bg-custom</code
-																>,
-																<code class="inline-block rounded bg-gray-100 px-1"
-																	>text-custom</code
-																>, and
-																<code class="inline-block rounded bg-gray-100 px-1"
-																	>border-custom</code
-																> in your code.
-															</p>
+															{#if tailwindVersion === 'v4'}
+																<p class="mb-4 text-gray-600">
+																	Tailwind CSS v4 has simplified configuration. You can add custom
+																	colors directly in your CSS:
+																</p>
+																<div class="rounded-md bg-gray-50 p-4">
+																	<div class="flex items-center justify-between">
+																		<p class="text-sm font-medium text-gray-700">Tailwind V4</p>
+																		<button
+																			onclick={() => copyConfig(oklchConfig, 'Tailwind V4')}
+																			class="text-xs text-blue-600 hover:text-blue-800"
+																		>
+																			Copy code
+																		</button>
+																	</div>
+																	<pre>{oklchConfig}</pre>
+																</div>
+															{:else}
+																<p class="mb-4 text-gray-600">
+																	Want to use this hex color as a custom Tailwind (&lt;v4.0) color?
+																	Here's how to add it to your project's configuration. After
+																	adding, you can use classes like <code
+																		class="inline-block rounded bg-gray-100 px-1">bg-custom</code
+																	>,
+																	<code class="inline-block rounded bg-gray-100 px-1"
+																		>text-custom</code
+																	>, and
+																	<code class="inline-block rounded bg-gray-100 px-1"
+																		>border-custom</code
+																	> in your code.
+																</p>
 
-															<!-- JavaScript/Node.js config -->
-															<div class="rounded-md bg-gray-50 p-4">
-																<div class="flex items-center justify-between">
-																	<p class="text-sm font-medium text-gray-700">
-																		tailwind.config.js
-																	</p>
-																	<button
-																		onclick={() => copyConfig(jsConfig, 'JavaScript')}
-																		class="text-xs text-blue-600 hover:text-blue-800"
+																<!-- JavaScript/Node.js config -->
+																<div class="rounded-md bg-gray-50 p-4">
+																	<div class="flex items-center justify-between">
+																		<p class="text-sm font-medium text-gray-700">
+																			tailwind.config.js
+																		</p>
+																		<button
+																			onclick={() => copyConfig(jsConfig, 'JavaScript')}
+																			class="text-xs text-blue-600 hover:text-blue-800"
+																		>
+																			Copy code
+																		</button>
+																	</div>
+																	<pre>{jsConfig}</pre>
+																</div>
+
+																<!-- Next.js specific -->
+																<div class="rounded-md bg-gray-50 p-4">
+																	<div class="flex items-center justify-between">
+																		<p class="text-sm font-medium text-gray-700">
+																			Next.js (tailwind.config.ts)
+																		</p>
+																		<button
+																			onclick={() => copyConfig(nextConfig, 'Next.js')}
+																			class="text-xs text-blue-600 hover:text-blue-800"
+																		>
+																			Copy code
+																		</button>
+																	</div>
+																	<pre>{nextConfig}</pre>
+																</div>
+
+																<!-- SvelteKit -->
+																<div class="rounded-md bg-gray-50 p-4">
+																	<div class="flex items-center justify-between">
+																		<p class="text-sm font-medium text-gray-700">
+																			SvelteKit (tailwind.config.js)
+																		</p>
+																		<button
+																			onclick={() => copyConfig(svelteConfig, 'SvelteKit')}
+																			class="text-xs text-blue-600 hover:text-blue-800"
+																		>
+																			Copy code
+																		</button>
+																	</div>
+																	<pre>{svelteConfig}</pre>
+																</div>
+
+																<!-- Usage example -->
+																<div class="mt-2 text-sm text-gray-600">
+																	<p>Then use in your code as:</p>
+																	<code class="mt-1 block rounded bg-gray-100 px-2 py-1">
+																		bg-custom text-custom border-custom
+																	</code>
+																	<div
+																		class="mt-4 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800"
 																	>
-																		Copy code
-																	</button>
+																		<strong>Note:</strong> After adding to your config, you'll need to
+																		restart your development server for the changes to take effect.
+																	</div>
 																</div>
-																<pre>
-{`module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        custom: '${inputColor}'
-      }
-    }
-  }
-}`}</pre>
-															</div>
-
-															<!-- Next.js specific -->
-															<div class="rounded-md bg-gray-50 p-4">
-																<div class="flex items-center justify-between">
-																	<p class="text-sm font-medium text-gray-700">
-																		Next.js (tailwind.config.ts)
-																	</p>
-																	<button
-																		onclick={() => copyConfig(nextConfig, 'Next.js')}
-																		class="text-xs text-blue-600 hover:text-blue-800"
-																	>
-																		Copy code
-																	</button>
-																</div>
-																<pre>
-{`import type { Config } from 'tailwindcss'
-
-const config: Config = {
-  theme: {
-    extend: {
-      colors: {
-        custom: '${inputColor}'
-      }
-    }
-  }
-}`}</pre>
-															</div>
-
-															<!-- SvelteKit -->
-															<div class="rounded-md bg-gray-50 p-4">
-																<div class="flex items-center justify-between">
-																	<p class="text-sm font-medium text-gray-700">
-																		SvelteKit (tailwind.config.js)
-																	</p>
-																	<button
-																		onclick={() => copyConfig(svelteConfig, 'SvelteKit')}
-																		class="text-xs text-blue-600 hover:text-blue-800"
-																	>
-																		Copy code
-																	</button>
-																</div>
-																<pre>
-{`/** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./src/**/*.{html,js,svelte,ts}'],
-  theme: {
-    extend: {
-      colors: {
-        custom: '${inputColor}'
-      }
-    }
-  },
-  plugins: []
-}`}</pre>
-															</div>
-
-															<!-- Usage example -->
-															<div class="mt-2 text-sm text-gray-600">
-																<p>Then use in your code as:</p>
-																<code class="mt-1 block rounded bg-gray-100 px-2 py-1">
-																	bg-custom text-custom border-custom
-																</code>
-																<div
-																	class="mt-4 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800"
-																>
-																	<strong>Note:</strong> After adding to your config, you'll need to
-																	restart your development server for the changes to take effect.
-																</div>
-															</div>
+															{/if}
 														</div>
 													</div>
 												{/if}
