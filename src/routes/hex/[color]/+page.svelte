@@ -202,7 +202,7 @@ export default {
 		<title>Tailwind ColorSnap - Convert hex colors to Tailwind CSS classes</title>
 		<meta
 			name="description"
-			content="Convert hex color codes to their nearest Tailwind CSS color class. Perfect for converting designs to Tailwind."
+			content="Convert hex color codes to their nearest Tailwind CSS color class or OKLCH values. Perfect for converting designs to Tailwind or modern CSS."
 		/>
 		<link rel="canonical" href="https://tailwindcolorsnap.frontandback.co.nz" />
 	{/if}
@@ -237,7 +237,8 @@ export default {
 							target="_blank"
 							rel="noopener">Tailwind CSS</a
 						>
-						color class. Perfect for developers matching designs to Tailwind's color palette.
+						color class or OKLCH values. Perfect for developers matching designs to Tailwind's color
+						palette.
 					</p>
 				</div>
 			</header>
