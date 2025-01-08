@@ -471,63 +471,30 @@ export default {
 															Technical Details:
 														</h3>
 														<ul class="list-disc pl-5 text-sm text-gray-600">
-															<li class="flex items-center justify-between">
-																<span>HEX: {inputColor}</span>
-																<button
-																	onclick={() => copyColor(inputColor, 'HEX')}
-																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
-																>
-																	Copy
-																</button>
-															</li>
-															<li class="flex items-center justify-between">
-																<span>RGB: {rgbValue}</span>
-																<button
-																	onclick={() => copyColor(rgbValue, 'RGB')}
-																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
-																>
-																	Copy
-																</button>
-															</li>
-															<li class="flex items-center justify-between">
-																<span>HSL: {hslValue}</span>
-																<button
-																	onclick={() => copyColor(hslValue, 'HSL')}
-																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
-																>
-																	Copy
-																</button>
-															</li>
-															<li class="flex items-center justify-between">
-																<span>OKLCH: {oklchValue}</span>
-																<button
-																	onclick={() => copyColor(oklchValue, 'OKLCH')}
-																	class="ml-2 text-xs text-blue-600 hover:text-blue-800"
-																>
-																	Copy
-																</button>
-															</li>
+															{#each [{ label: 'HEX', value: inputColor }, { label: 'RGB', value: rgbValue }, { label: 'HSL', value: hslValue }, { label: 'OKLCH', value: oklchValue }] as { label, value }}
+																<li class="flex items-center justify-between">
+																	<span>{label}: {value}</span>
+																	<button
+																		onclick={() => copyColor(value, label)}
+																		class="ml-2 text-xs text-blue-600 hover:text-blue-800"
+																	>
+																		Copy
+																	</button>
+																</li>
+															{/each}
 
-															<li>
-																Contrast ratio against white: {contrastWhite}
-																{#if Number(contrastWhite) < 3}
-																	<span class="ml-1 text-red-600">(very poor contrast)</span>
-																{:else if Number(contrastWhite) < 4.5}
-																	<span class="ml-1 text-amber-600"
-																		>(poor contrast - avoid using for text)</span
-																	>
-																{/if}
-															</li>
-															<li>
-																Contrast ratio against black: {contrastBlack}
-																{#if Number(contrastBlack) < 3}
-																	<span class="ml-1 text-red-600">(very poor contrast)</span>
-																{:else if Number(contrastBlack) < 4.5}
-																	<span class="ml-1 text-amber-600"
-																		>(poor contrast - avoid using for text)</span
-																	>
-																{/if}
-															</li>
+															{#each [{ label: 'white', value: contrastWhite }, { label: 'black', value: contrastBlack }] as { label, value }}
+																<li>
+																	Contrast ratio against {label}: {value}
+																	{#if Number(value) < 3}
+																		<span class="ml-1 text-red-600">(very poor contrast)</span>
+																	{:else if Number(value) < 4.5}
+																		<span class="ml-1 text-amber-600"
+																			>(poor contrast - avoid using for text)</span
+																		>
+																	{/if}
+																</li>
+															{/each}
 														</ul>
 													</div>
 												{/if}
@@ -595,8 +562,9 @@ export default {
 																<p class="mb-4 text-gray-600">
 																	Want to use this hex color as a custom Tailwind (&lt;v4.0) color?
 																	Here's how to add it to your project's configuration. After
-																	adding, you can use classes like <code
-																		class="inline-block rounded bg-gray-100 px-1">bg-custom</code
+																	adding, you can use classes like
+																	<code class="inline-block rounded bg-gray-100 px-1"
+																		>bg-custom</code
 																	>,
 																	<code class="inline-block rounded bg-gray-100 px-1"
 																		>text-custom</code
@@ -606,53 +574,22 @@ export default {
 																	> in your code.
 																</p>
 
-																<!-- JavaScript/Node.js config -->
-																<div class="rounded-md bg-gray-50 p-4">
-																	<div class="flex items-center justify-between">
-																		<p class="text-sm font-medium text-gray-700">
-																			tailwind.config.js
-																		</p>
-																		<button
-																			onclick={() => copyConfig(jsConfig, 'JavaScript')}
-																			class="text-xs text-blue-600 hover:text-blue-800"
-																		>
-																			Copy code
-																		</button>
+																{#each [{ title: 'tailwind.config.js', code: jsConfig, type: 'JavaScript' }, { title: 'Next.js (tailwind.config.ts)', code: nextConfig, type: 'Next.js' }, { title: 'SvelteKit (tailwind.config.js)', code: svelteConfig, type: 'SvelteKit' }] as config}
+																	<div class="rounded-md bg-gray-50 p-4">
+																		<div class="flex items-center justify-between">
+																			<p class="text-sm font-medium text-gray-700">
+																				{config.title}
+																			</p>
+																			<button
+																				onclick={() => copyConfig(config.code, config.type)}
+																				class="text-xs text-blue-600 hover:text-blue-800"
+																			>
+																				Copy code
+																			</button>
+																		</div>
+																		<pre>{config.code}</pre>
 																	</div>
-																	<pre>{jsConfig}</pre>
-																</div>
-
-																<!-- Next.js specific -->
-																<div class="rounded-md bg-gray-50 p-4">
-																	<div class="flex items-center justify-between">
-																		<p class="text-sm font-medium text-gray-700">
-																			Next.js (tailwind.config.ts)
-																		</p>
-																		<button
-																			onclick={() => copyConfig(nextConfig, 'Next.js')}
-																			class="text-xs text-blue-600 hover:text-blue-800"
-																		>
-																			Copy code
-																		</button>
-																	</div>
-																	<pre>{nextConfig}</pre>
-																</div>
-
-																<!-- SvelteKit -->
-																<div class="rounded-md bg-gray-50 p-4">
-																	<div class="flex items-center justify-between">
-																		<p class="text-sm font-medium text-gray-700">
-																			SvelteKit (tailwind.config.js)
-																		</p>
-																		<button
-																			onclick={() => copyConfig(svelteConfig, 'SvelteKit')}
-																			class="text-xs text-blue-600 hover:text-blue-800"
-																		>
-																			Copy code
-																		</button>
-																	</div>
-																	<pre>{svelteConfig}</pre>
-																</div>
+																{/each}
 
 																<!-- Usage example -->
 																<div class="mt-2 text-sm text-gray-600">
