@@ -480,7 +480,7 @@ export default {
 														</h3>
 														<ul class="list-disc pl-5 text-sm text-gray-600">
 															{#each [{ label: 'HEX', value: inputColor }, { label: 'RGB', value: rgbValue }, { label: 'HSL', value: hslValue }, { label: 'OKLCH', value: oklchValue }] as { label, value }}
-																<li class="flex items-center justify-between">
+																<li class="">
 																	<span>{label}: {value}</span>
 																	<button
 																		onclick={() => copyColor(value, label)}
