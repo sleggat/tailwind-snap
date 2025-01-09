@@ -131,7 +131,11 @@
 	}
 
 	// Define config templates
-	let oklchConfig = $derived(`--color-custom: ${hexToOklch(inputColor)};`);
+	let oklchConfig = $derived(`@import "tailwindcss";
+
+@theme {
+  --color-custom: ${hexToOklch(inputColor)};
+}`);
 	let jsConfig = $derived(`module.exports = {
   theme: {
     extend: {
