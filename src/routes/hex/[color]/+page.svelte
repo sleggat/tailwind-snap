@@ -385,7 +385,7 @@ export default {
 									{#if copied}
 										✓ Copied!
 									{:else}
-										Copy {tailwindVersion === 'v4' ? 'OKLCH' : 'Tailwind'} Color Class ({tailwindVersion ===
+										Copy {tailwindVersion === 'v4' ? 'OKLCH Color Value' : 'TailwindColor Class'} ({tailwindVersion ===
 										'v4'
 											? 'v4'
 											: 'v3'})
