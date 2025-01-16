@@ -212,7 +212,7 @@ export default {
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={imageUrl} />
 	{:else}
-		<title>Tailwind ColorSnap - Convert hex colors to Tailwind CSS classes</title>
+		<title>Tailwind ColorSnap - Convert, Match & Explore colors for Tailwind CSS</title>
 		<meta
 			name="description"
 			content="Convert hex color codes to their nearest Tailwind CSS color class or OKLCH values. Perfect for converting designs to Tailwind or modern CSS."
@@ -237,8 +237,8 @@ export default {
 						>
 							Updated for <a
 								href="https://tailwindcss.com/docs/v4-beta"
-								title="Tailwind v4 Beta Documentation"
-								aria-label="Tailwind v4 Beta Documentation">Tailwind v4</a
+								title="Tailwind CSS v4 Beta Documentation"
+								aria-label="Tailwind CSS v4 Beta Documentation">Tailwind v4</a
 							>
 						</span>
 					</div>
