@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /api/
+Sitemap: https://tailwindcolorsnap.frontandback.co.nz/sitemap.xml
