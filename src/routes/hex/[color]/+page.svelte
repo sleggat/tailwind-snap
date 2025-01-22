@@ -192,13 +192,12 @@ export default {
 					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
 
 		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class or OKLCH value. ${colorDescription}.`}
-		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '')}`}
-		{@const urlCanonical = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '').toUpperCase()}`}
+		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '').toLowerCase()}`}
 		{@const imageUrl = `https://tailwindcolorsnap.frontandback.co.nz/og/${inputColor.replace('#', '')}`}
 
 		<title>{pageTitle}</title>
 		<meta name="description" content={description} />
-		<link rel="canonical" href={urlCanonical} />
+		<link rel="canonical" href={url} />
 
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={description} />
