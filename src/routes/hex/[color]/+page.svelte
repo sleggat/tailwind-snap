@@ -21,6 +21,7 @@
 
 	let expandedAnalysis = $state(false);
 	let expandedCode = $state(false);
+	let navigationTimeout;
 
 	const data = $props();
 
@@ -53,23 +54,18 @@
 		try {
 			const color = oklch(hex);
 			// Check if color was properly parsed
-			if (
-				!color ||
-				typeof color.l !== 'number' ||
-				typeof color.c !== 'number' ||
-				typeof color.h !== 'number'
-			) {
-				return `oklch(0% 0 0)`; // Fallback to black if parsing fails
+			if (!color || typeof color.l !== 'number') {
+				return `oklch(0% 0 0)`;
 			}
 
 			const L = (color.l * 100).toFixed(2);
-			const C = color.c.toFixed(4);
-			const H = color.h.toFixed(2);
+			const C = color.c?.toFixed(4) || '0';
+			const H = color.h?.toFixed(2) || '0'; // Use 0 for undefined hue (grayscale colors)
 
 			return `oklch(${L}% ${C} ${H})`;
 		} catch (error) {
 			console.error('Error converting hex to OKLCH:', error);
-			return `oklch(0% 0 0)`; // Fallback to black
+			return `oklch(0% 0 0)`;
 		}
 	}
 
@@ -83,7 +79,7 @@
 		let colorValue = inputColor;
 		if (!colorValue.startsWith('#')) {
 			colorValue = '#' + colorValue;
-			inputColor = colorValue; // Update the input value
+			inputColor = colorValue;
 		}
 
 		const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
@@ -93,8 +89,13 @@
 			const nearest = findNearestTailwindColor(colorValue, method);
 			if (nearest && (!nearestColor || nearest.hex !== nearestColor.hex)) {
 				nearestColor = nearest;
-				const newHex = colorValue.replace('#', '');
-				goto(`/hex/${newHex}`, { replaceState: true });
+
+				// Debounce the navigation
+				clearTimeout(navigationTimeout);
+				navigationTimeout = setTimeout(() => {
+					const newHex = colorValue.replace('#', '');
+					goto(`/hex/${newHex}`, { replaceState: true });
+				}, 500); // Wait 500ms after last change before navigating
 			}
 		}
 	});
