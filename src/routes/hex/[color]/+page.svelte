@@ -236,9 +236,9 @@ export default {
 							class="whitespace-nowrap rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-500"
 						>
 							Updated for <a
-								href="https://tailwindcss.com/docs/v4-beta"
-								title="Tailwind CSS v4 Beta Documentation"
-								aria-label="Tailwind CSS v4 Beta Documentation">Tailwind v4</a
+								href="https://tailwindcss.com"
+								title="Tailwind CSS v4 Documentation"
+								aria-label="Tailwind CSS v4 Documentation">Tailwind v4</a
 							>
 						</span>
 					</div>
@@ -340,7 +340,7 @@ export default {
 												class="mt-1 block w-full rounded-md border-gray-300"
 											>
 												<option value="v3">Tailwind CSS v3</option>
-												<option value="v4">Tailwind CSS v4 (Beta)</option>
+												<option value="v4">Tailwind CSS v4</option>
 											</select>
 										</div>
 									</div>
