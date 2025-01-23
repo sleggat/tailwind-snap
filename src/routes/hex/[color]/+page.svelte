@@ -50,12 +50,27 @@
 	});
 
 	function hexToOklch(hex) {
-		const color = oklch(hex);
-		const L = (color.l * 100).toFixed(2); // Lightness to 2 decimal places
-		const C = color.c.toFixed(4); // Chroma to 4 decimal places
-		const H = color.h.toFixed(2); // Keep hue in degrees, 2 decimal places
+		try {
+			const color = oklch(hex);
+			// Check if color was properly parsed
+			if (
+				!color ||
+				typeof color.l !== 'number' ||
+				typeof color.c !== 'number' ||
+				typeof color.h !== 'number'
+			) {
+				return `oklch(0% 0 0)`; // Fallback to black if parsing fails
+			}
 
-		return `oklch(${L}% ${C} ${H})`;
+			const L = (color.l * 100).toFixed(2);
+			const C = color.c.toFixed(4);
+			const H = color.h.toFixed(2);
+
+			return `oklch(${L}% ${C} ${H})`;
+		} catch (error) {
+			console.error('Error converting hex to OKLCH:', error);
+			return `oklch(0% 0 0)`; // Fallback to black
+		}
 	}
 
 	// Update effect to use selected method
