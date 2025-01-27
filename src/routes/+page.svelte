@@ -1,6 +1,14 @@
 <!-- src/routes/+page.svelte -->
 <script>
-	// This page will only show briefly before redirecting
+	import { tailwindColors } from '$lib/colors';
+
+	// Pick a random color from the imported list
+	const randomColor = tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+
+	// Delay before redirecting (2-3 seconds for SEO purposes)
+	setTimeout(() => {
+		window.location.href = `/hex/${randomColor}`;
+	}, 30000);
 </script>
 
 <svelte:head>
@@ -9,5 +17,5 @@
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center bg-violet-50">
-	<div class="text-gray-500">Loading...</div>
+	<div class="text-gray-500">Picking a color for you...</div>
 </div>
