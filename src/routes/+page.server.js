@@ -19,6 +19,7 @@ export async function load({ request }) {
                     <p>Convert any hex color to its closest Tailwind CSS color class or OKLCH values. 
                     Perfect for developers matching designs to Tailwind's color palette.</p>
 					<p>Now supporting Tailwind V4</p>
+					<a href="/hex/ffc30e">Try it now</a>
                 `
 			}
 		};
