@@ -8,7 +8,7 @@
 	// Delay before redirecting (2-3 seconds for SEO purposes)
 	setTimeout(() => {
 		window.location.href = `/hex/${randomColor}`;
-	}, 30000);
+	}, 3000);
 </script>
 
 <svelte:head>
