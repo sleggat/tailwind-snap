@@ -16,9 +16,9 @@ export async function GET({ url }) {
 
 	const colors = [
 		// All Tailwind colors
-		...tailwindColors.map((color) => color.hex.substring(1)),
+		...tailwindColors.map((color) => color.hex.substring(1))
 		// Popular web colors
-		...popularHues.map((color) => color.substring(1))
+		// ...popularHues.map((color) => color.substring(1))
 	];
 
 	const xml = `<?xml version="1.0" encoding="UTF-8" ?>
