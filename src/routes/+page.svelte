@@ -33,10 +33,13 @@
 <div class="flex min-h-screen items-center justify-center bg-violet-50 p-6 text-center">
 	<div class="text-gray-500">
 		{#if isBot()}
-			<h1>Tailwind ColorSnap</h1>
-			<p>Convert any hex color to its closest Tailwind CSS color class or OKLCH values.</p>
-			<p>Tailwind ColorSnap helps you match brand colors with the Tailwind palette.</p>
-			<p>Email us: <a href="mailto:hello@frontandback.co.nz">hello@frontandback.co.nz</a></p>
+			<h1>Welcome to Tailwind ColorSnap</h1>
+			<p>
+				Convert any hex color to its closest Tailwind CSS color class or OKLCH values. Perfect for
+				developers matching designs to Tailwind's color palette.
+			</p>
+			<p>Now supporting Tailwind V4</p>
+			<a href="/hex/ffc30e">Try it now</a>
 		{:else}
 			<div>Picking a color for you...</div>
 		{/if}
