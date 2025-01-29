@@ -11,6 +11,7 @@
 		getContrastRatio,
 		describeColor
 	} from '$lib/colors';
+	import { getColorInfo } from '$lib/colorEnrichment';
 	import { oklch, formatCss, parse } from 'culori';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { toast } from 'svelte-sonner';
@@ -21,6 +22,7 @@
 
 	let expandedAnalysis = $state(false);
 	let expandedCode = $state(false);
+	let expandedColorInfo = $state(false);
 	let navigationTimeout;
 
 	const data = $props();
@@ -43,6 +45,8 @@
 			.join(', ')
 	);
 	let oklchValue = $derived(hexToOklch(inputColor));
+
+	let colorInfo = $derived(nearestColor && getColorInfo(nearestColor.name, nearestColor.hex));
 
 	const colorFamily = derived(currentColor, ($color) => {
 		const nearest = findNearestTailwindColor($color);
@@ -95,7 +99,7 @@
 				navigationTimeout = setTimeout(() => {
 					const newHex = colorValue.replace('#', '');
 					goto(`/hex/${newHex}`, { replaceState: true });
-				}, 500); // Wait 500ms after last change before navigating
+				}, 500);
 			}
 		}
 	});
@@ -408,14 +412,17 @@ export default {
 									{/if}
 								</button>
 
-								<div class="mt-8">
+								<!-- Replace the two accordion sections with this unified structure -->
+
+								<div class="mt-6 space-y-4">
+									<!-- Technical Analysis -->
 									<button
 										onclick={() => (expandedAnalysis = !expandedAnalysis)}
 										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
 										aria-expanded={expandedAnalysis}
 									>
 										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
-											Input Color Analysis & Technical Details
+											Technical Analysis
 										</h2>
 										<svg
 											class="h-5 w-5 text-gray-500 transition-transform duration-200"
@@ -435,93 +442,168 @@ export default {
 
 									{#if expandedAnalysis}
 										<div class="mt-2 rounded-lg bg-white p-4 shadow-sm" transition:slide>
-											<div class="prose prose-sm">
-												{#if nearestColor}
-													<p>
-														{colorDescription}
-													</p>
-													{#if nearestColor.distance < 5}
-														<p>
-															This color is an excellent match with Tailwind's {nearestColor.name},
-															with a very small difference (distance: {nearestColor.distance.toFixed(
-																2
-															)}).
-														</p>
-													{:else if nearestColor.distance < 15}
-														<p>
-															This color matches well with Tailwind's {nearestColor.name}, showing
-															only subtle differences (distance: {nearestColor.distance.toFixed(
-																2
-															)}).
-														</p>
-													{:else}
-														<p>
-															This color is closest to Tailwind's {nearestColor.name}, though there
-															are noticeable differences (distance: {nearestColor.distance.toFixed(
-																2
-															)}).
-														</p>
-													{/if}
+											<div class="prose prose-sm space-y-4">
+												<!-- Color Values -->
+												<div>
+													<h3 class="text-sm font-medium text-gray-700">Color Values:</h3>
+													<ul class="list-none pl-0 text-sm text-gray-600">
+														{#each [{ label: 'HEX', value: inputColor }, { label: 'RGB', value: rgbValue }, { label: 'HSL', value: hslValue }, { label: 'OKLCH', value: oklchValue }] as { label, value }}
+															<li
+																class="flex items-center justify-between border-b border-gray-100 py-2"
+															>
+																<span>{label}: {value}</span>
+																<button
+																	onclick={() => copyColor(value, label)}
+																	class="text-xs text-blue-600 hover:text-blue-800"
+																>
+																	Copy
+																</button>
+															</li>
+														{/each}
+													</ul>
+												</div>
 
-													{#if nearestColor.name.includes('-50') || nearestColor.name.includes('-100')}
-														<p>
-															As a very light shade in the {nearestColor.name.split('-')[0]} family,
-															this color works well for subtle backgrounds and hover states.
-														</p>
-													{:else if nearestColor.name.includes('-900') || nearestColor.name.includes('-950')}
-														<p>
-															Being one of the darkest shades in the {nearestColor.name.split(
-																'-'
-															)[0]} family, this color provides strong contrast and works well for text
-															or prominent UI elements.
-														</p>
-													{:else if nearestColor.name.includes('-500')}
-														<p>
-															This is a medium shade in the {nearestColor.name.split('-')[0]} family,
-															making it versatile for both backgrounds and foreground elements.
-														</p>
-													{/if}
-
-													{#if method === 'lab'}
-														<p>
-															Using LAB color space matching provides perceptually accurate results,
-															as it accounts for how human vision perceives color differences.
-														</p>
-													{:else}
-														<p>
-															Using RGB color space matching provides straightforward geometric
-															distance calculations between colors.
-														</p>
-													{/if}
-
-													<div class="mt-4">
-														<h3 class="mb-2 text-sm font-medium text-gray-700">
-															Technical Details:
-														</h3>
-														<ul class="list-disc pl-5 text-sm text-gray-600">
-															{#each [{ label: 'HEX', value: inputColor }, { label: 'RGB', value: rgbValue }, { label: 'HSL', value: hslValue }, { label: 'OKLCH', value: oklchValue }] as { label, value }}
-																<li class="">
-																	<span>{label}: {value}</span>
-																	<button
-																		onclick={() => copyColor(value, label)}
-																		class="ml-2 text-xs text-blue-600 hover:text-blue-800"
-																	>
-																		Copy
-																	</button>
-																</li>
-															{/each}
-
-															{#each [{ label: 'white', value: contrastWhite }, { label: 'black', value: contrastBlack }] as { label, value }}
-																<li>
-																	Contrast ratio against {label}: {value}
+												<!-- Contrast Analysis -->
+												<div>
+													<h3 class="text-sm font-medium text-gray-700">Contrast Analysis:</h3>
+													<ul class="mt-2 space-y-2 text-sm text-gray-600">
+														{#each [{ label: 'white', value: contrastWhite }, { label: 'black', value: contrastBlack }] as { label, value }}
+															<li class="flex items-center gap-2">
+																<div class="w-32">Against {label}:</div>
+																<div class="flex items-center gap-2">
+																	{value}
 																	{#if Number(value) < 3}
-																		<span class="ml-1 text-red-600">(very poor contrast)</span>
+																		<span
+																			class="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700"
+																			>Very poor contrast</span
+																		>
 																	{:else if Number(value) < 4.5}
-																		<span class="ml-1 text-amber-600"
-																			>(poor contrast - avoid using for text)</span
+																		<span
+																			class="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700"
+																			>Poor contrast</span
+																		>
+																	{:else}
+																		<span
+																			class="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700"
+																			>Good contrast</span
 																		>
 																	{/if}
-																</li>
+																</div>
+															</li>
+														{/each}
+													</ul>
+												</div>
+
+												<!-- Matching Method Info -->
+												<div>
+													<h3 class="text-sm font-medium text-gray-700">Color Matching:</h3>
+													<p class="text-sm text-gray-600">
+														{#if method === 'lab'}
+															Using LAB color space for perceptually accurate matching (CIE94
+															formula).
+														{:else}
+															Using RGB color space for geometric distance calculation.
+														{/if}
+														{#if nearestColor.distance < 5}
+															Distance of {nearestColor.distance.toFixed(2)} indicates an excellent match.
+														{:else if nearestColor.distance < 15}
+															Distance of {nearestColor.distance.toFixed(2)} shows a good match with
+															subtle differences.
+														{:else}
+															Distance of {nearestColor.distance.toFixed(2)} indicates noticeable differences.
+														{/if}
+													</p>
+												</div>
+											</div>
+										</div>
+									{/if}
+
+									<!-- Design Guidelines -->
+									<button
+										onclick={() => (expandedColorInfo = !expandedColorInfo)}
+										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
+										aria-expanded={expandedColorInfo}
+									>
+										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
+											Design Guidelines & Usage
+										</h2>
+										<svg
+											class="h-5 w-5 text-gray-500 transition-transform duration-200"
+											class:rotate-180={expandedColorInfo}
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M19 9l-7 7-7-7"
+											/>
+										</svg>
+									</button>
+
+									{#if expandedColorInfo}
+										<div class="mt-2 rounded-lg bg-white p-4 shadow-sm" transition:slide>
+											<div class="prose prose-sm space-y-6">
+												<!-- Color Description -->
+												<div>
+													<h3 class="text-lg font-medium text-gray-900">Color Description</h3>
+													<p class="text-gray-600">{colorDescription}</p>
+												</div>
+
+												<!-- Usage Guidelines -->
+												{#if colorInfo?.usage?.ui}
+													<div>
+														<h3 class="text-lg font-medium text-gray-900">Recommended Uses</h3>
+														<ul class="mt-2 list-disc space-y-1 pl-5 text-gray-600">
+															{#each colorInfo.usage.ui as use}
+																<li>{use}</li>
+															{/each}
+														</ul>
+													</div>
+												{/if}
+
+												<!-- Accessibility Guidelines -->
+												{#if colorInfo?.accessibility}
+													<div>
+														<h3 class="text-lg font-medium text-gray-900">
+															Accessibility Considerations
+														</h3>
+														<div class="rounded-md bg-blue-50 p-4 text-sm text-blue-700">
+															<p>{colorInfo.accessibility.textGuidelines}</p>
+															{#if colorInfo.accessibility.uiConsiderations}
+																<p class="mt-2">{colorInfo.accessibility.uiConsiderations}</p>
+															{/if}
+														</div>
+													</div>
+												{/if}
+
+												<!-- Color Combinations -->
+												{#if colorInfo?.usage?.combinations}
+													<div>
+														<h3 class="text-lg font-medium text-gray-900">
+															Suggested Color Combinations
+														</h3>
+														<div class="flex flex-wrap gap-2">
+															{#each colorInfo.usage.combinations as combination}
+																<div
+																	class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
+																>
+																	{combination}
+																</div>
+															{/each}
+														</div>
+													</div>
+												{/if}
+
+												<!-- Real World Examples -->
+												{#if colorInfo?.webExamples}
+													<div>
+														<h3 class="text-lg font-medium text-gray-900">Real World Examples</h3>
+														<ul class="mt-2 list-disc space-y-1 pl-5 text-gray-600">
+															{#each colorInfo.webExamples as example}
+																<li>{example}</li>
 															{/each}
 														</ul>
 													</div>

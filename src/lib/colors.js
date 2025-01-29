@@ -638,3 +638,21 @@ export function describeColor(hex) {
 		return 'Color description unavailable';
 	}
 }
+
+function getColorInfo(colorName, colorHex) {
+	const family = colorName.split('-')[0];
+	const baseInfo = colorEnrichment[family] || {};
+	const specificInfo = colorUseCases[colorName] || {};
+	const combinations = colorCombinations(colorHex);
+
+	return {
+		...baseInfo,
+		...specificInfo,
+		combinations,
+		technicalDetails: {
+			...baseInfo.technicalNotes,
+			displayP3Coverage: calculateDisplayP3Coverage(colorHex),
+			webSafeAlternative: findClosestWebSafeColor(colorHex)
+		}
+	};
+}
