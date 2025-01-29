@@ -1,47 +1,68 @@
 <!-- src/routes/+page.svelte -->
 <script>
+	import { onMount, onDestroy } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { tailwindColors } from '$lib/colors';
 
-	// Function to detect if the visitor is a bot
-	function isBot() {
-		const botPatterns = /bot|google|bing|crawler|spider/i;
-		return botPatterns.test(navigator.userAgent);
+	/** @type {import('./$types').PageData} */
+	export let data;
+
+	let currentColor = '#ffffff';
+	let intervalId;
+	let finalColor;
+
+	function getRandomColor() {
+		const randomColorObj = tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
+		return randomColorObj.hex;
 	}
 
-	// Pick a random color from the imported list and remove the '#' from hex value
-	const randomColorObj = tailwindColors[Math.floor(Math.random() * tailwindColors.length)];
-	const randomHex = randomColorObj.hex.replace('#', '');
+	onMount(() => {
+		if (!data.isBot) {
+			// Start color cycling every 100ms
+			intervalId = setInterval(() => {
+				currentColor = getRandomColor();
+			}, 100);
 
-	// Redirect users, but let bots see content for SEO
-	if (!isBot()) {
-		setTimeout(() => {
-			window.location.href = `/hex/${randomHex}`;
-		}, 3000);
-	}
+			// Pick the final destination color
+			finalColor = getRandomColor().replace('#', '');
+
+			// After 2.5 seconds, stop cycling and show final color
+			setTimeout(() => {
+				clearInterval(intervalId);
+				currentColor = `#${finalColor}`;
+
+				// Wait 500ms showing the final color, then redirect
+				setTimeout(() => {
+					goto(`/hex/${finalColor}`, { replaceState: true });
+				}, 500);
+			}, 2500);
+		}
+	});
+
+	onDestroy(() => {
+		if (intervalId) clearInterval(intervalId);
+	});
 </script>
 
 <svelte:head>
-	<title>Tailwind ColorSnap – Find Closest Tailwind CSS Colors</title>
-	<meta
-		name="description"
-		content="Convert any hex color to its closest Tailwind CSS color or OKLCH value for easier design-to-development transitions."
-	/>
+	<title>{data.seoContent.title}</title>
+	<meta name="description" content={data.seoContent.description} />
 	<meta property="og:url" content="https://tailwindcolorsnap.frontandback.co.nz" />
 	<link rel="canonical" href="https://tailwindcolorsnap.frontandback.co.nz" />
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center bg-violet-50 p-6 text-center">
 	<div class="text-gray-500">
-		{#if isBot()}
-			<h1>Welcome to Tailwind ColorSnap</h1>
-			<p>
-				Convert any hex color to its closest Tailwind CSS color class or OKLCH values. Perfect for
-				developers matching designs to Tailwind's color palette.
-			</p>
-			<p>Now supporting Tailwind V4</p>
-			<a href="/hex/ffc30e">Try it now</a>
+		{#if data.isBot}
+			{@html data.seoContent.content}
 		{:else}
-			<div>Picking a color for you...</div>
+			<div class="space-y-4">
+				<div>Picking a color for you...</div>
+				<div
+					class="mx-auto h-32 w-32 rounded-lg transition-colors duration-100"
+					style:background-color={currentColor}
+				></div>
+			</div>
 		{/if}
 	</div>
 </div>
