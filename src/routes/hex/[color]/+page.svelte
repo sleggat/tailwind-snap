@@ -26,9 +26,11 @@
 	let navigationTimeout;
 
 	const data = $props();
+	const DEFAULT_COLOR = '#000000';
 
-	// Remember data structure comes from +page.server.js return value
-	let inputColor = $state(data.data?.hex ?? '#11d275');
+	let inputColor = $state(
+		data.data?.hex && /^#[0-9A-Fa-f]{6}$/.test(data.data.hex) ? data.data.hex : DEFAULT_COLOR
+	);
 	let isValid = $state(true);
 	let nearestColor = $state(data.data?.nearest ?? null);
 	let copied = $state(false);

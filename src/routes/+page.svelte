@@ -35,7 +35,7 @@
 				setTimeout(() => {
 					goto(`/hex/${finalColor}`, { replaceState: true });
 				}, 500);
-			}, 2500);
+			}, 1500);
 		}
 	});
 
