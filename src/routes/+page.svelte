@@ -42,13 +42,38 @@
 	onDestroy(() => {
 		if (intervalId) clearInterval(intervalId);
 	});
+
+	// Meta content
+	const baseUrl = 'https://tailwindcolorsnap.frontandback.co.nz';
+	const title = 'Tailwind ColorSnap - Find the Perfect Tailwind CSS Color Match';
+	const description =
+		'Convert any hex color to its closest Tailwind CSS color class or OKLCH value. Perfect for matching designs to Tailwind CSS color palette. Supports Tailwind V4.';
+	// Using a demo color for the OG image that showcases the tool's capabilities
+	const demoColor = 'ffc30e';
 </script>
 
 <svelte:head>
-	<title>{data.seoContent.title}</title>
-	<meta name="description" content={data.seoContent.description} />
-	<meta property="og:url" content="https://tailwindcolorsnap.frontandback.co.nz" />
-	<link rel="canonical" href="https://tailwindcolorsnap.frontandback.co.nz" />
+	<title>{title}</title>
+	<meta name="description" content={description} />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href={baseUrl} />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={description} />
+	<meta property="og:url" content={baseUrl} />
+	<meta property="og:image" content={`${baseUrl}/og/${demoColor}`} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:type" content="image/svg+xml" />
+	<meta property="og:type" content="website" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={description} />
+	<meta name="twitter:image" content={`${baseUrl}/og/${demoColor}`} />
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center bg-violet-50 p-6 text-center">
