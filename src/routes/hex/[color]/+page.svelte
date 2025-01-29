@@ -9,9 +9,13 @@
 		hexToRgb,
 		hexToHsl,
 		getContrastRatio,
-		describeColor
+		describeColor,
+		generateMonochromaticColors,
+		generateComplementaryColors,
+		generateAnalogousColors,
+		generateTriadicColors,
+		getColorInfo
 	} from '$lib/colors';
-	import { getColorInfo } from '$lib/colorEnrichment';
 	import { oklch, formatCss, parse } from 'culori';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { toast } from 'svelte-sonner';
@@ -106,17 +110,23 @@
 		}
 	});
 
-	async function copyToClipboard() {
-		if (!nearestColor?.name) return;
-
-		const valueToCopy = tailwindVersion === 'v4' ? hexToOklch(inputColor) : nearestColor.name;
-
-		await navigator.clipboard.writeText(valueToCopy);
-		toast.success(
-			`${tailwindVersion === 'v4' ? 'OKLCH' : 'Tailwind'} color value copied to clipboard`
-		);
-		copied = true;
-		setTimeout(() => (copied = false), 2000);
+	async function copyToClipboard(text, message, toast) {
+		try {
+			await navigator.clipboard.writeText(text);
+			if (toast) {
+				toast.success(message || 'Copied to clipboard');
+			}
+			return true;
+		} catch (err) {
+			if (toast) {
+				toast.error('Failed to copy');
+			}
+			console.error('Copy failed:', err);
+			return false;
+		}
+	}
+	async function handleCopyToClipboard(value, type) {
+		await copyToClipboard(value, `${type} copied to clipboard`, toast);
 	}
 	async function handleColorClick(e, colorHex) {
 		e.preventDefault();
@@ -399,7 +409,12 @@ export default {
 								</div>
 
 								<button
-									onclick={copyToClipboard}
+									onclick={() =>
+										copyToClipboard(
+											tailwindVersion === 'v4' ? hexToOklch(inputColor) : nearestColor.name,
+											`${tailwindVersion === 'v4' ? 'OKLCH' : 'Tailwind'} color value copied to clipboard`,
+											toast
+										)}
 									class="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
 									class:bg-green-600={copied}
 									class:hover:bg-green-700={copied}
@@ -582,19 +597,117 @@ export default {
 												{/if}
 
 												<!-- Color Combinations -->
-												{#if colorInfo?.usage?.combinations}
+												{#if colorInfo?.combinations}
 													<div>
-														<h3 class="text-lg font-medium text-gray-900">
-															Suggested Color Combinations
-														</h3>
-														<div class="flex flex-wrap gap-2">
-															{#each colorInfo.usage.combinations as combination}
-																<div
-																	class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
-																>
-																	{combination}
+														<h3 class="text-lg font-medium text-gray-900">Color Combinations</h3>
+														<div class="mt-4 grid gap-4 sm:grid-cols-2">
+															<!-- Monochromatic -->
+															<div class="rounded-lg border border-gray-200 p-4">
+																<h4 class="mb-2 text-sm font-medium text-gray-700">
+																	Monochromatic
+																</h4>
+																<div class="flex gap-2">
+																	{#each generateMonochromaticColors(inputColor) as color}
+																		<button
+																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color}
+																			onclick={() =>
+																				copyToClipboard(
+																					color,
+																					`Color ${color} copied to clipboard`,
+																					toast
+																				)}
+																		>
+																			<div
+																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+																			>
+																				{color}
+																			</div>
+																		</button>
+																	{/each}
 																</div>
-															{/each}
+															</div>
+
+															<!-- Complementary -->
+															<div class="rounded-lg border border-gray-200 p-4">
+																<h4 class="mb-2 text-sm font-medium text-gray-700">
+																	Complementary
+																</h4>
+																<div class="flex gap-2">
+																	{#each generateComplementaryColors(inputColor) as color}
+																		<button
+																			class="group relative h-12 flex-1 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color}
+																			onclick={() =>
+																				copyToClipboard(
+																					color,
+																					`Color ${color} copied to clipboard`,
+																					toast
+																				)}
+																		>
+																			<div
+																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+																			>
+																				{color}
+																			</div>
+																		</button>
+																	{/each}
+																</div>
+															</div>
+
+															<!-- Analogous -->
+															<div class="rounded-lg border border-gray-200 p-4">
+																<h4 class="mb-2 text-sm font-medium text-gray-700">Analogous</h4>
+																<div class="flex gap-2">
+																	{#each generateAnalogousColors(inputColor) as color}
+																		<button
+																			class="group relative h-12 flex-1 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color}
+																			onclick={() =>
+																				copyToClipboard(
+																					color,
+																					`Color ${color} copied to clipboard`,
+																					toast
+																				)}
+																		>
+																			<div
+																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+																			>
+																				{color}
+																			</div>
+																		</button>
+																	{/each}
+																</div>
+															</div>
+
+															<!-- Triadic -->
+															<div class="rounded-lg border border-gray-200 p-4">
+																<h4 class="mb-2 text-sm font-medium text-gray-700">Triadic</h4>
+																<div class="flex gap-2">
+																	{#each generateTriadicColors(inputColor) as color}
+																		<button
+																			class="group relative h-12 flex-1 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color}
+																			onclick={() =>
+																				copyToClipboard(
+																					color,
+																					`Color ${color} copied to clipboard`,
+																					toast
+																				)}
+																		>
+																			<div
+																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+																			>
+																				{color}
+																			</div>
+																		</button>
+																	{/each}
+																</div>
+															</div>
+														</div>
+
+														<div class="mt-6 rounded-md bg-blue-50 p-3 text-sm text-blue-700">
+															Click any color to copy its hex value. Hover to preview the hex code.
 														</div>
 													</div>
 												{/if}

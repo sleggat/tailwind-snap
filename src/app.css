@@ -3,6 +3,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+.prose {
+	max-width: 80ch;
+}
 #colorPicker .color {
 	border-radius: 0.3rem !important;
 }
