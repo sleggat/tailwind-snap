@@ -14,6 +14,10 @@
 		generateComplementaryColors,
 		generateAnalogousColors,
 		generateTriadicColors,
+		generateMonochromaticTailwindColors,
+		generateComplementaryTailwindColors,
+		generateAnalogousTailwindColors,
+		generateTriadicTailwindColors,
 		getColorInfo
 	} from '$lib/colors';
 	import { oklch, formatCss, parse } from 'culori';
@@ -581,21 +585,6 @@ export default {
 													</div>
 												{/if}
 
-												<!-- Accessibility Guidelines -->
-												{#if colorInfo?.accessibility}
-													<div>
-														<h3 class="text-lg font-medium text-gray-900">
-															Accessibility Considerations
-														</h3>
-														<div class="rounded-md bg-blue-50 p-4 text-sm text-blue-700">
-															<p>{colorInfo.accessibility.textGuidelines}</p>
-															{#if colorInfo.accessibility.uiConsiderations}
-																<p class="mt-2">{colorInfo.accessibility.uiConsiderations}</p>
-															{/if}
-														</div>
-													</div>
-												{/if}
-
 												<!-- Color Combinations -->
 												{#if colorInfo?.combinations}
 													<div>
@@ -607,21 +596,21 @@ export default {
 																	Monochromatic
 																</h4>
 																<div class="flex gap-2">
-																	{#each generateMonochromaticColors(inputColor) as color}
+																	{#each generateMonochromaticTailwindColors(inputColor) as color}
 																		<button
 																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color}
+																			style:background-color={color.hex}
 																			onclick={() =>
 																				copyToClipboard(
-																					color,
-																					`Color ${color} copied to clipboard`,
+																					color.name,
+																					`Tailwind class ${color.name} copied to clipboard`,
 																					toast
 																				)}
 																		>
 																			<div
 																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
 																			>
-																				{color}
+																				{color.name}
 																			</div>
 																		</button>
 																	{/each}
@@ -634,21 +623,21 @@ export default {
 																	Complementary
 																</h4>
 																<div class="flex gap-2">
-																	{#each generateComplementaryColors(inputColor) as color}
+																	{#each generateComplementaryTailwindColors(inputColor) as color}
 																		<button
-																			class="group relative h-12 flex-1 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color}
+																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color.hex}
 																			onclick={() =>
 																				copyToClipboard(
-																					color,
-																					`Color ${color} copied to clipboard`,
+																					color.name,
+																					`Tailwind class ${color.name} copied to clipboard`,
 																					toast
 																				)}
 																		>
 																			<div
 																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
 																			>
-																				{color}
+																				{color.name}
 																			</div>
 																		</button>
 																	{/each}
@@ -659,21 +648,21 @@ export default {
 															<div class="rounded-lg border border-gray-200 p-4">
 																<h4 class="mb-2 text-sm font-medium text-gray-700">Analogous</h4>
 																<div class="flex gap-2">
-																	{#each generateAnalogousColors(inputColor) as color}
+																	{#each generateAnalogousTailwindColors(inputColor) as color}
 																		<button
-																			class="group relative h-12 flex-1 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color}
+																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color.hex}
 																			onclick={() =>
 																				copyToClipboard(
-																					color,
-																					`Color ${color} copied to clipboard`,
+																					color.name,
+																					`Tailwind class ${color.name} copied to clipboard`,
 																					toast
 																				)}
 																		>
 																			<div
 																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
 																			>
-																				{color}
+																				{color.name}
 																			</div>
 																		</button>
 																	{/each}
@@ -684,30 +673,26 @@ export default {
 															<div class="rounded-lg border border-gray-200 p-4">
 																<h4 class="mb-2 text-sm font-medium text-gray-700">Triadic</h4>
 																<div class="flex gap-2">
-																	{#each generateTriadicColors(inputColor) as color}
+																	{#each generateTriadicTailwindColors(inputColor) as color}
 																		<button
-																			class="group relative h-12 flex-1 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color}
+																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+																			style:background-color={color.hex}
 																			onclick={() =>
 																				copyToClipboard(
-																					color,
-																					`Color ${color} copied to clipboard`,
+																					color.name,
+																					`Tailwind class ${color.name} copied to clipboard`,
 																					toast
 																				)}
 																		>
 																			<div
 																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
 																			>
-																				{color}
+																				{color.name}
 																			</div>
 																		</button>
 																	{/each}
 																</div>
 															</div>
-														</div>
-
-														<div class="mt-6 rounded-md bg-blue-50 p-3 text-sm text-blue-700">
-															Click any color to copy its hex value. Hover to preview the hex code.
 														</div>
 													</div>
 												{/if}
@@ -721,6 +706,21 @@ export default {
 																<li>{example}</li>
 															{/each}
 														</ul>
+													</div>
+												{/if}
+
+												<!-- Accessibility Guidelines -->
+												{#if colorInfo?.accessibility}
+													<div>
+														<h3 class="text-lg font-medium text-gray-900">
+															Accessibility Considerations
+														</h3>
+														<div class="rounded-md bg-blue-50 p-4 text-sm text-blue-700">
+															<p>{colorInfo.accessibility.textGuidelines}</p>
+															{#if colorInfo.accessibility.uiConsiderations}
+																<p class="mt-2">{colorInfo.accessibility.uiConsiderations}</p>
+															{/if}
+														</div>
 													</div>
 												{/if}
 											</div>

@@ -1003,6 +1003,26 @@ export function generateTriadicColors(baseColor) {
 	];
 }
 
+export function generateMonochromaticTailwindColors(baseColor, count = 5) {
+	const colors = generateMonochromaticColors(baseColor, count);
+	return colors.map((color) => findNearestTailwindColor(color));
+}
+
+export function generateComplementaryTailwindColors(baseColor) {
+	const colors = generateComplementaryColors(baseColor);
+	return colors.map((color) => findNearestTailwindColor(color));
+}
+
+export function generateAnalogousTailwindColors(baseColor) {
+	const colors = generateAnalogousColors(baseColor);
+	return colors.map((color) => findNearestTailwindColor(color));
+}
+
+export function generateTriadicTailwindColors(baseColor) {
+	const colors = generateTriadicColors(baseColor);
+	return colors.map((color) => findNearestTailwindColor(color));
+}
+
 // Helper function to find nearest Tailwind colors for combinations
 export function findNearestTailwindColors(colors) {
 	return colors.map((color) => ({
