@@ -32,6 +32,7 @@
 	let expandedCode = $state(false);
 	let expandedColorInfo = $state(false);
 	let navigationTimeout;
+	let isUrlUpdate = $state(false);
 
 	const data = $props();
 	const DEFAULT_COLOR = '#000000';
@@ -83,13 +84,13 @@
 		}
 	}
 
-	// Update effect to use selected method
+	// Handle input changes and URL updates
 	$effect(() => {
 		if (!inputColor) return;
 
 		$currentColor = inputColor;
 
-		// Add # if missing
+		// Add # if missing (this is immediate user input formatting)
 		let colorValue = inputColor;
 		if (!colorValue.startsWith('#')) {
 			colorValue = '#' + colorValue;
@@ -103,14 +104,14 @@
 			const nearest = findNearestTailwindColor(colorValue, method);
 			if (nearest && (!nearestColor || nearest.hex !== nearestColor.hex)) {
 				nearestColor = nearest;
-
-				// Debounce the navigation
-				clearTimeout(navigationTimeout);
-				navigationTimeout = setTimeout(() => {
-					const newHex = colorValue.replace('#', '');
-					goto(`/hex/${newHex}`, { replaceState: true });
-				}, 500);
 			}
+
+			// Debounce only the URL update
+			clearTimeout(navigationTimeout);
+			navigationTimeout = setTimeout(() => {
+				const newHex = colorValue.replace('#', '');
+				goto(`/hex/${newHex}`, { replaceState: true });
+			}, 500);
 		}
 	});
 
@@ -134,8 +135,6 @@
 	}
 	async function handleColorClick(e, colorHex) {
 		e.preventDefault();
-		const newHex = colorHex.replace('#', '');
-		await goto(`/hex/${newHex}`, { replaceState: true });
 		inputColor = colorHex;
 	}
 	async function copyColor(text, type) {
