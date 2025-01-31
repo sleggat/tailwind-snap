@@ -3,16 +3,6 @@
 	import { navigating, page } from '$app/stores';
 	import { browser } from '$app/environment';
 
-	// Ensure dataLayer exists globally
-	if (browser) {
-		window.dataLayer = window.dataLayer || [];
-	}
-
-	// Define gtag globally
-	function gtag() {
-		window.dataLayer.push(arguments);
-	}
-
 	// Track page views with Matomo
 	$: if (browser && window._paq && $page && !$navigating) {
 		window._paq.push(['setCustomUrl', window.location.href]);
@@ -21,10 +11,17 @@
 	}
 
 	// Track page views with Google Analytics
-	$: if (browser && $page && !$navigating) {
-		gtag('event', 'page_view', {
-			page_path: window.location.pathname,
-			page_title: document.title
-		});
+	export function trackPageview(url) {
+		if (window.gtag) {
+			window.gtag('config', 'G-CBSKC07ZT8', {
+				page_path: url,
+				page_title: document.title
+			});
+		}
 	}
+
+	// Listen for route changes and track them
+	page.subscribe(($page) => {
+		trackPageview($page.url.pathname);
+	});
 </script>

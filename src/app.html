@@ -12,6 +12,15 @@
 		/>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-CBSKC07ZT8"></script>
 		<script>
+			// Google Analytics
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+			gtag('config', 'G-CBSKC07ZT8', { anonymize_ip: true });
+
+			// Matomo
 			var _paq = (window._paq = window._paq || []);
 			// _paq.push(['trackPageView']);
 			_paq.push(['enableLinkTracking']);
