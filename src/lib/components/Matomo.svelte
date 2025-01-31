@@ -11,4 +11,13 @@
 			window._paq.push(['trackPageView']);
 		}
 	}
+	$: if (browser && window.dataLayer && $page) {
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag('js', new Date());
+
+		gtag('config', 'G-CBSKC07ZT8');
+	}
 </script>
