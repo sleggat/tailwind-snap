@@ -3,23 +3,28 @@
 	import { navigating, page } from '$app/stores';
 	import { browser } from '$app/environment';
 
-	$: if (browser && window._paq && $page) {
-		// Wait for navigation to complete
-		if (!$navigating) {
-			window._paq.push(['setCustomUrl', window.location.href]);
-			window._paq.push(['setDocumentTitle', document.title]);
-			window._paq.push(['trackPageView']);
-		}
+	// Ensure dataLayer exists globally
+	if (browser) {
+		window.dataLayer = window.dataLayer || [];
 	}
-	$: if (browser && window.dataLayer && $page) {
-		if (!$navigating) {
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag('js', new Date());
 
-			gtag('config', 'G-CBSKC07ZT8');
-		}
+	// Define gtag globally
+	function gtag() {
+		window.dataLayer.push(arguments);
+	}
+
+	// Track page views with Matomo
+	$: if (browser && window._paq && $page && !$navigating) {
+		window._paq.push(['setCustomUrl', window.location.href]);
+		window._paq.push(['setDocumentTitle', document.title]);
+		window._paq.push(['trackPageView']);
+	}
+
+	// Track page views with Google Analytics
+	$: if (browser && $page && !$navigating) {
+		gtag('event', 'page_view', {
+			page_path: window.location.pathname,
+			page_title: document.title
+		});
 	}
 </script>
