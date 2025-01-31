@@ -908,14 +908,107 @@ export const technicalColorInfo = {
 
 export const colorUseCases = {
 	'blue-500': {
-		webExamples: ["Facebook's primary brand color", "Twitter's action buttons"],
-		commonUses: ['Primary buttons', 'Links', 'Brand accents'],
-		industries: ['Tech', 'Finance', 'Healthcare']
+		webExamples: [
+			"Facebook's primary brand color",
+			"Twitter's action buttons",
+			"LinkedIn's interactive elements",
+			"PayPal's trust indicators"
+		],
+		commonUses: [
+			'Primary buttons',
+			'Links',
+			'Brand accents',
+			'Navigation elements',
+			'Trust indicators'
+		],
+		industries: ['Tech', 'Finance', 'Healthcare', 'Corporate', 'Education']
 	},
 	'green-500': {
-		webExamples: ["Spotify's brand color", "WhatsApp's theme"],
-		commonUses: ['Success states', 'Environmental themes', 'Financial indicators'],
-		industries: ['Environment', 'Finance', 'Health']
+		webExamples: [
+			"Spotify's brand color",
+			"WhatsApp's theme",
+			"Evernote's logo",
+			"TechCrunch's brand accent"
+		],
+		commonUses: [
+			'Success states',
+			'Environmental themes',
+			'Financial indicators',
+			'Progress bars',
+			'Confirmation messages'
+		],
+		industries: ['Environment', 'Finance', 'Health', 'Education', 'Agriculture']
+	},
+	'red-500': {
+		webExamples: [
+			"Netflix's brand color",
+			"YouTube's play button",
+			"Pinterest's primary color",
+			"Target's brand identity"
+		],
+		commonUses: [
+			'Error states',
+			'Delete actions',
+			'Urgent notifications',
+			'Sale badges',
+			'Important alerts'
+		],
+		industries: ['Entertainment', 'Retail', 'Food & Beverage', 'Emergency Services']
+	},
+	'purple-500': {
+		webExamples: [
+			"Twitch's brand color",
+			"Discord's theme",
+			"Slack's accent color",
+			"Yahoo's brand"
+		],
+		commonUses: [
+			'Creative elements',
+			'Premium features',
+			'Innovation indicators',
+			'Community sections'
+		],
+		industries: ['Creative', 'Gaming', 'Technology', 'Beauty', 'Entertainment']
+	},
+	'orange-500': {
+		webExamples: ["Amazon's primary buttons", "SoundCloud's brand", "HubSpot's accent color"],
+		commonUses: ['Call-to-action buttons', 'Warning states', 'Energy themes', 'Promotional badges'],
+		industries: ['E-commerce', 'Food', 'Construction', 'Sports', 'Energy']
+	},
+	'yellow-500': {
+		webExamples: ["Snapchat's brand color", "IMDb's logo", "National Geographic's border"],
+		commonUses: ['Warning indicators', 'Review stars', 'Highlighting', 'Energy themes'],
+		industries: ['Construction', 'Transportation', "Children's Products", 'Food Service']
+	},
+	'pink-500': {
+		webExamples: ["Lyft's brand color", "Dribbble's theme", "T-Mobile's identity"],
+		commonUses: ['Fashion elements', 'Social features', 'Youth themes', 'Creative accents'],
+		industries: ['Fashion', 'Beauty', 'Social Media', 'Entertainment']
+	},
+	'indigo-500': {
+		webExamples: ["Visa's brand elements", "IBM's corporate color", "Intel's logo color"],
+		commonUses: ['Corporate elements', 'Professional interfaces', 'Technology themes'],
+		industries: ['Banking', 'Corporate', 'Technology', 'Security']
+	},
+	'teal-500': {
+		webExamples: ["Deliveroo's brand color", "MailChimp's accents", "Tumblr's theme options"],
+		commonUses: ['Medical interfaces', 'Environmental themes', 'Clean design accents'],
+		industries: ['Healthcare', 'Sustainability', 'Wellness', 'Ocean-related']
+	},
+	'gray-500': {
+		webExamples: ["Apple's UI elements", "Medium's text color", "GitHub's interface"],
+		commonUses: ['Text content', 'Neutral backgrounds', 'Disabled states', 'Interface elements'],
+		industries: ['Technology', 'Publishing', 'Professional Services']
+	},
+	'rose-500': {
+		webExamples: ["Airbnb's brand color", "Klarna's accent", "Dunkin' brand elements"],
+		commonUses: ['Lifestyle features', 'Dating apps', 'Food-related content'],
+		industries: ['Hospitality', 'Dating', 'Food & Beverage', 'Lifestyle']
+	},
+	'cyan-500': {
+		webExamples: ["Vimeo's player controls", "Trello's brand elements", "Digital Ocean's theme"],
+		commonUses: ['Tech interfaces', 'Water themes', 'Cool accents'],
+		industries: ['Technology', 'Water Services', 'Science', 'Marine']
 	}
 };
 

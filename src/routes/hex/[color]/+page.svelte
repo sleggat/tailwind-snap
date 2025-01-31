@@ -232,7 +232,7 @@ export default {
 
 		<title>{pageTitle}</title>
 		<meta name="description" content={description} />
-
+		<meta property="og:type" content="website" />
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={url} />
@@ -247,6 +247,7 @@ export default {
 		<meta name="twitter:image" content={imageUrl} />
 	{:else}
 		<title>Tailwind ColorSnap - Convert, Match & Explore colors for Tailwind CSS</title>
+		<meta property="og:type" content="website" />
 		<meta
 			name="description"
 			content="Convert hex color codes to their nearest Tailwind CSS color class or OKLCH values. Perfect for converting designs to Tailwind or modern CSS."

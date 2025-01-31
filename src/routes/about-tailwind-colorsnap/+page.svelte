@@ -18,7 +18,7 @@
 	<title>{pageTitle}</title>
 	<meta name="description" content={description} />
 	<link rel="canonical" href={url} />
-
+	<meta property="og:type" content="website" />
 	<meta property="og:title" content={pageTitle} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={url} />

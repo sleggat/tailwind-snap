@@ -20,6 +20,7 @@
 		name="description"
 		content="Complete reference of all Tailwind CSS colors. Browse, search and copy all default Tailwind color classes and hex codes."
 	/>
+	<meta property="og:type" content="website" />
 	<meta
 		property="og:title"
 		content="All Tailwind CSS Colors - Complete Color Reference | ColorSnap"
