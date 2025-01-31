@@ -265,7 +265,8 @@ export default {
 			<header class="">
 				<div class="mx-auto max-w-3xl px-4 py-6">
 					<div class="flex items-center gap-3">
-						<h1 class="text-4xl font-medium text-{$colorFamily}-700">Tailwind ColorSnap</h1>
+						<h1 class="hidden">Matching {inputColor} - {colorDescription}</h1>
+						<h2 class="text-4xl font-medium text-{$colorFamily}-700">Tailwind ColorSnap</h2>
 						<span
 							class="whitespace-nowrap rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-500"
 						>
