@@ -1,7 +1,14 @@
 <!-- src/lib/components/Matomo.svelte -->
-<script>
+<script lang="ts">
 	import { navigating, page } from '$app/stores';
 	import { browser } from '$app/environment';
+
+	declare global {
+		interface Window {
+			_paq: any[];
+			gtag: (command: string, id: string, config: object) => void;
+		}
+	}
 
 	// Track page views with Matomo
 	$: if (browser && window._paq && $page && !$navigating) {
@@ -11,8 +18,8 @@
 	}
 
 	// Track page views with Google Analytics
-	export function trackPageview(url) {
-		if (window.gtag) {
+	export function trackPageview(url: string): void {
+		if (browser && window.gtag && $page && !$navigating) {
 			window.gtag('config', 'G-CBSKC07ZT8', {
 				page_path: url,
 				page_title: document.title
