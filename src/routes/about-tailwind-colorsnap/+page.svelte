@@ -41,9 +41,9 @@
 		</header>
 
 		<main class="flex-grow">
-			<div class="mx-auto max-w-3xl px-4 py-8">
-				<div class="rounded-lg bg-white shadow">
-					<div class="p-6 text-xl text-gray-600">
+			<div class="mx-auto max-w-3xl py-8">
+				<div class="">
+					<div class="p-4 text-xl text-gray-600">
 						<p class="mb-4">
 							At Front&Back, we use Tailwind CSS a lot! Almost every <a
 								href="https://frontandback.co.nz/services/website-design-development"
@@ -78,9 +78,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="mx-auto max-w-3xl px-4 py-8">
-				<div class="rounded-lg bg-white shadow">
-					<div class="p-6 text-xl text-gray-600">
+			<div class="mx-auto max-w-3xl py-8">
+				<div class="">
+					<div class="p-4 text-xl text-gray-600">
 						<h2 class="pb-6 text-2xl font-medium text-violet-800">About Front&Back</h2>
 						<p class="pb-6">
 							Front&Back is an Aotearoa New Zealand-based creative technology studio, specialising
