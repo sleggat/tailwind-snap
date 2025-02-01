@@ -33,15 +33,17 @@
 <div class="min-h-screen bg-violet-50">
 	<header class="">
 		<div class="mx-auto max-w-7xl px-4 py-6">
-			<h1 class="text-4xl font-bold text-gray-900">Tailwind CSS Colors</h1>
-			<p class="mt-2 text-lg text-gray-600">
+			<div class="text-4xl font-bold text-gray-900" aria-label="All Tailwind CSS Colors">
+				Tailwind CSS Colors
+			</div>
+			<h1 class="mt-2 text-lg text-gray-600">
 				Complete reference of all default Tailwind CSS colors. Click any color to copy its class
 				name or hex code.
-			</p>
+			</h1>
 		</div>
 	</header>
 
-	<main class="mx-auto max-w-7xl px-4 py-12">
+	<main class="mx-auto max-w-7xl px-4 py-6">
 		<div class="prose mb-8 max-w-none">
 			<p>
 				Tailwind CSS includes a modern color palette with a wide range of beautiful colors. Each

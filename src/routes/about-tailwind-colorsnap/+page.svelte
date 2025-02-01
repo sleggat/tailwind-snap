@@ -36,7 +36,9 @@
 	<div class="flex min-h-screen flex-col bg-violet-50">
 		<header class="">
 			<div class="mx-auto max-w-3xl px-4 py-6">
-				<h1 class="text-4xl font-bold text-violet-800">About Tailwind ColorSnap</h1>
+				<div class="text-4xl font-bold text-violet-800" aria-label="About Tailwind ColorSnap">
+					About Tailwind ColorSnap
+				</div>
 			</div>
 		</header>
 
@@ -44,13 +46,13 @@
 			<div class="mx-auto max-w-3xl py-8">
 				<div class="">
 					<div class="p-4 text-xl text-gray-600">
-						<p class="mb-4">
+						<h1 class="mb-4">
 							At Front&Back, we use Tailwind CSS a lot! Almost every <a
 								href="https://frontandback.co.nz/services/website-design-development"
 								class="font-medium text-blue-600 hover:text-blue-800">web project</a
 							> we do now uses it, and we’re working to transition legacy websites to using it going
 							forward.
-						</p>
+						</h1>
 						<p class="mb-4">
 							While adding Custom Colors to Tailwind is fairly straightforward, it’s often easier
 							and cleaner, promoting consistency and maintainability, when you stick with Tailwind’s

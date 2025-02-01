@@ -275,7 +275,12 @@ export default {
 			<header class="">
 				<div class="mx-auto max-w-3xl px-4 py-6">
 					<div class="flex items-center gap-3">
-						<h2 class="text-4xl font-bold text-{$colorFamily}-700">Tailwind ColorSnap</h2>
+						<div
+							class="text-4xl font-bold text-{$colorFamily}-700"
+							aria-label="Tailwind ColorSnap Home"
+						>
+							Tailwind ColorSnap
+						</div>
 						<span
 							class="whitespace-nowrap rounded-full bg-{$colorFamily}-100 px-2.5 py-1 text-xs font-medium text-{$colorFamily}-700"
 						>
