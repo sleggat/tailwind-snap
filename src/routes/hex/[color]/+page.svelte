@@ -254,7 +254,7 @@ export default {
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={imageUrl} />
 	{:else}
-		<title>Convert HEX Colors to Tailwind CSS Classes | ColorSnap</title>
+		<title>Convert HEX Colors to Tailwind CSS Classes | Tailwind ColorSnap</title>
 		<meta property="og:type" content="website" />
 		<meta name="robots" content="index, follow" />
 		<meta

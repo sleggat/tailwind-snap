@@ -23,7 +23,7 @@
 	<meta property="og:type" content="website" />
 	<meta
 		property="og:title"
-		content="All Tailwind CSS Colors - Complete Color Reference | ColorSnap"
+		content="All Tailwind CSS Colors - Complete Color Reference | Tailwind ColorSnap"
 	/>
 	<meta
 		property="og:description"
