@@ -5,6 +5,8 @@
 	import { currentColor } from '$lib/stores';
 	import { goto } from '$app/navigation';
 
+	let url = 'https://tailwindcolorsnap.frontandback.co.nz/colors';
+
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
 		toast.success(`${type === 'name' ? 'Tailwind class' : 'Hex code'} copied to clipboard`);
@@ -29,6 +31,7 @@
 		property="og:description"
 		content="Browse all Tailwind CSS default colors. Find and copy exact hex codes and class names for your Tailwind projects."
 	/>
+	<link rel="canonical" href={url} />
 </svelte:head>
 <div class="min-h-screen bg-violet-50">
 	<header class="">
