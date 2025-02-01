@@ -36,7 +36,7 @@
 	<div class="flex min-h-screen flex-col bg-violet-50">
 		<header class="">
 			<div class="mx-auto max-w-3xl px-4 py-6">
-				<h1 class="text-4xl font-medium text-violet-800">About Tailwind ColorSnap</h1>
+				<h1 class="text-4xl font-bold text-violet-800">About Tailwind ColorSnap</h1>
 			</div>
 		</header>
 
