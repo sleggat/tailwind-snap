@@ -30,9 +30,7 @@
 
 	let expandedAnalysis = $state(false);
 	let expandedCode = $state(false);
-	let expandedColorInfo = $state(false);
 	let navigationTimeout;
-	let isUrlUpdate = $state(false);
 
 	const data = $props();
 	const DEFAULT_COLOR = '#000000';
@@ -221,14 +219,25 @@ export default {
 	{#if nearestColor}
 		{@const pageTitle =
 			nearestColor.distance === 0
-				? `Color ${inputColor} matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
+				? `Color ${inputColor} matches Tailwind's ${nearestColor.name} color class | ColorSnap`
 				: nearestColor.distance < 5
-					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
-					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
-
+					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | ColorSnap`
+					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | ColorSnap`}
 		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class or OKLCH value. ${colorDescription}.`}
 		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '').toLowerCase()}`}
 		{@const imageUrl = `https://tailwindcolorsnap.frontandback.co.nz/og/${inputColor.replace('#', '')}`}
+
+		<!-- Add robots meta based on exact match -->
+		<meta
+			name="robots"
+			content={nearestColor.distance === 0 ? 'index, follow' : 'noindex, follow'}
+		/>
+
+		<!-- If it's an exact match, add canonical to itself, otherwise point to home -->
+		<link
+			rel="canonical"
+			href={nearestColor.distance === 0 ? url : 'https://tailwindcolorsnap.frontandback.co.nz'}
+		/>
 
 		<title>{pageTitle}</title>
 		<meta name="description" content={description} />
@@ -240,14 +249,14 @@ export default {
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:type" content="image/svg+xml" />
-
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={pageTitle} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={imageUrl} />
 	{:else}
-		<title>Tailwind ColorSnap - Convert, Match & Explore colors for Tailwind CSS</title>
+		<title>Convert HEX Colors to Tailwind CSS Classes | ColorSnap</title>
 		<meta property="og:type" content="website" />
+		<meta name="robots" content="index, follow" />
 		<meta
 			name="description"
 			content="Convert hex color codes to their nearest Tailwind CSS color class or OKLCH values. Perfect for converting designs to Tailwind or modern CSS."
@@ -266,7 +275,6 @@ export default {
 			<header class="">
 				<div class="mx-auto max-w-3xl px-4 py-6">
 					<div class="flex items-center gap-3">
-						<h1 class="hidden">Matching {inputColor} - {colorDescription}</h1>
 						<h2 class="text-4xl font-medium text-{$colorFamily}-700">Tailwind ColorSnap</h2>
 						<span
 							class="whitespace-nowrap rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-500"
@@ -278,22 +286,11 @@ export default {
 							>
 						</span>
 					</div>
-					<h2 class="mt-2 text-lg text-gray-600">
-						Convert any hex color to its closest
-						<a
-							href="https://tailwindcss.com/docs/customizing-colors"
-							class="text-blue-600 hover:text-blue-800"
-							target="_blank"
-							rel="noopener">Tailwind CSS</a
-						>
-						color class or OKLCH values. Perfect for developers matching designs to Tailwind's color
-						palette.
-					</h2>
 				</div>
 			</header>
 
 			<main class="flex-grow">
-				<div class="mx-auto max-w-3xl px-4 py-8">
+				<div class="mx-auto max-w-3xl px-4 py-4">
 					<div class="rounded-lg bg-white shadow">
 						<div class="p-6">
 							<div class="mb-6">
@@ -384,12 +381,28 @@ export default {
 								<div class="mb-6 grid grid-cols-2 gap-4">
 									<div>
 										<div class="mb-2 block text-sm font-medium text-gray-700">Input Color</div>
-										<div
-											class="h-24 rounded-md shadow-sm"
-											style:background-color={inputColor}
-										></div>
-										<code class="mt-2 block text-sm text-gray-600">{inputColor}</code>
-										<code class="mt-2 block text-sm text-gray-600">{hexToOklch(inputColor)}</code>
+										<div class="rounded-md border border-gray-200">
+											<div
+												class="h-24 rounded-t-md shadow-sm"
+												style:background-color={inputColor}
+											></div>
+											<div class="divide-y divide-gray-200">
+												<button
+													onclick={() => copyColor(inputColor, 'HEX')}
+													class="flex w-full items-center justify-between p-2 text-sm text-gray-600 hover:bg-gray-50"
+												>
+													<code>{inputColor}</code>
+													<span class="text-xs text-blue-600">Copy HEX</span>
+												</button>
+												<button
+													onclick={() => copyColor(hexToOklch(inputColor), 'OKLCH')}
+													class="flex w-full items-center justify-between p-2 text-sm text-gray-600 hover:bg-gray-50"
+												>
+													<code>{hexToOklch(inputColor)}</code>
+													<span class="text-xs text-blue-600">Copy OKLCH</span>
+												</button>
+											</div>
+										</div>
 									</div>
 
 									<div>
@@ -398,40 +411,58 @@ export default {
 												class="hidden md:inline">Tailwind</span
 											> Color
 										</div>
-										<div
-											class="h-24 rounded-md shadow-sm"
-											style:background-color={nearestColor.hex}
-										></div>
-										<code class="mt-2 block text-sm text-gray-600">{nearestColor.name}</code>
-										<div class="mt-1 text-xs text-gray-500">
-											Distance: {nearestColor.distance.toFixed(2)}
-											{#if nearestColor.distance > 20}
-												<span class="ml-1 text-amber-600">(significant difference)</span>
-											{/if}
+										<div class="rounded-md border border-gray-200">
+											<div
+												class="h-24 rounded-t-md shadow-sm"
+												style:background-color={nearestColor.hex}
+											></div>
+											<button
+												onclick={() => copyColor(nearestColor.name, 'Tailwind class')}
+												class="flex w-full items-center justify-between p-2 text-sm text-gray-600 hover:bg-gray-50"
+											>
+												<code>{nearestColor.name}</code>
+												<span class="text-xs text-blue-600">Copy class</span>
+											</button>
+											<div class="border-t border-gray-200 p-2 text-xs text-gray-500">
+												Distance: {nearestColor.distance.toFixed(2)}
+												{#if nearestColor.distance > 20}
+													<span class="ml-1 text-amber-600">(significant difference)</span>
+												{/if}
+											</div>
 										</div>
 									</div>
 								</div>
 
-								<button
-									onclick={() =>
-										copyToClipboard(
-											tailwindVersion === 'v4' ? hexToOklch(inputColor) : nearestColor.name,
-											`${tailwindVersion === 'v4' ? 'OKLCH' : 'Tailwind'} color value copied to clipboard`,
-											toast
-										)}
-									class="w-full rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
-									class:bg-green-600={copied}
-									class:hover:bg-green-700={copied}
-								>
-									{#if copied}
-										✓ Copied!
+								<div class="py-6">
+									{#if colorInfo}
+										<h1 class="text-xl text-{$colorFamily}-500 font-semibold">
+											{colorDescription}.
+										</h1>
+										{#if colorInfo?.usage?.ui || colorInfo?.webExamples}
+											<ul class="text-md mt-3 list-disc space-y-1.5 pl-4 text-{$colorFamily}-700">
+												{#if colorInfo?.usage?.ui}
+													<li>
+														Commonly used for {colorInfo.usage.ui.slice(0, -1).join(', ')}, and {colorInfo.usage.ui.slice(
+															-1
+														)}
+													</li>
+												{/if}
+												{#if colorInfo?.webExamples}
+													<li>
+														You might recognize it from {colorInfo.webExamples
+															.slice(0, -1)
+															.join(', ')}, and {colorInfo.webExamples.slice(-1)}
+													</li>
+												{/if}
+											</ul>
+										{/if}
 									{:else}
-										Copy {tailwindVersion === 'v4' ? 'OKLCH Color Value' : 'TailwindColor Class'} ({tailwindVersion ===
-										'v4'
-											? 'v4'
-											: 'v3'})
+										<h1 class="text-lg text-gray-600">
+											Convert any hex color to its closest Tailwind CSS color class or OKLCH values.
+											Perfect for developers matching designs to Tailwind's color palette.
+										</h1>
 									{/if}
-								</button>
+								</div>
 
 								<!-- Replace the two accordion sections with this unified structure -->
 
@@ -535,194 +566,6 @@ export default {
 														{/if}
 													</p>
 												</div>
-											</div>
-										</div>
-									{/if}
-
-									<!-- Design Guidelines -->
-									<button
-										onclick={() => (expandedColorInfo = !expandedColorInfo)}
-										class="flex w-full items-center justify-between rounded-lg bg-white p-4 shadow-sm ring ring-gray-100 hover:bg-gray-50"
-										aria-expanded={expandedColorInfo}
-									>
-										<h2 class="text-lg font-semibold text-{$colorFamily}-700">
-											Design Guidelines & Usage
-										</h2>
-										<svg
-											class="h-5 w-5 text-gray-500 transition-transform duration-200"
-											class:rotate-180={expandedColorInfo}
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke="currentColor"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M19 9l-7 7-7-7"
-											/>
-										</svg>
-									</button>
-
-									{#if expandedColorInfo}
-										<div class="mt-2 rounded-lg bg-white p-4 shadow-sm" transition:slide>
-											<div class="prose prose-sm space-y-6">
-												<!-- Color Description -->
-												<div>
-													<h3 class="text-lg font-medium text-gray-900">Color Description</h3>
-													<p class="text-gray-600">{colorDescription}</p>
-												</div>
-
-												<!-- Usage Guidelines -->
-												{#if colorInfo?.usage?.ui}
-													<div>
-														<h3 class="text-lg font-medium text-gray-900">Recommended Uses</h3>
-														<ul class="mt-2 list-disc space-y-1 pl-5 text-gray-600">
-															{#each colorInfo.usage.ui as use}
-																<li>{use}</li>
-															{/each}
-														</ul>
-													</div>
-												{/if}
-
-												<!-- Color Combinations -->
-												{#if colorInfo?.combinations}
-													<div>
-														<h3 class="text-lg font-medium text-gray-900">Color Combinations</h3>
-														<div class="mt-4 grid gap-4 sm:grid-cols-2">
-															<!-- Monochromatic -->
-															<div class="rounded-lg border border-gray-200 p-4">
-																<h4 class="mb-2 text-sm font-medium text-gray-700">
-																	Monochromatic
-																</h4>
-																<div class="flex gap-2">
-																	{#each generateMonochromaticTailwindColors(inputColor) as color}
-																		<button
-																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color.hex}
-																			onclick={() =>
-																				copyToClipboard(
-																					color.name,
-																					`Tailwind class ${color.name} copied to clipboard`,
-																					toast
-																				)}
-																		>
-																			<div
-																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
-																			>
-																				{color.name}
-																			</div>
-																		</button>
-																	{/each}
-																</div>
-															</div>
-
-															<!-- Complementary -->
-															<div class="rounded-lg border border-gray-200 p-4">
-																<h4 class="mb-2 text-sm font-medium text-gray-700">
-																	Complementary
-																</h4>
-																<div class="flex gap-2">
-																	{#each generateComplementaryTailwindColors(inputColor) as color}
-																		<button
-																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color.hex}
-																			onclick={() =>
-																				copyToClipboard(
-																					color.name,
-																					`Tailwind class ${color.name} copied to clipboard`,
-																					toast
-																				)}
-																		>
-																			<div
-																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
-																			>
-																				{color.name}
-																			</div>
-																		</button>
-																	{/each}
-																</div>
-															</div>
-
-															<!-- Analogous -->
-															<div class="rounded-lg border border-gray-200 p-4">
-																<h4 class="mb-2 text-sm font-medium text-gray-700">Analogous</h4>
-																<div class="flex gap-2">
-																	{#each generateAnalogousTailwindColors(inputColor) as color}
-																		<button
-																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color.hex}
-																			onclick={() =>
-																				copyToClipboard(
-																					color.name,
-																					`Tailwind class ${color.name} copied to clipboard`,
-																					toast
-																				)}
-																		>
-																			<div
-																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
-																			>
-																				{color.name}
-																			</div>
-																		</button>
-																	{/each}
-																</div>
-															</div>
-
-															<!-- Triadic -->
-															<div class="rounded-lg border border-gray-200 p-4">
-																<h4 class="mb-2 text-sm font-medium text-gray-700">Triadic</h4>
-																<div class="flex gap-2">
-																	{#each generateTriadicTailwindColors(inputColor) as color}
-																		<button
-																			class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
-																			style:background-color={color.hex}
-																			onclick={() =>
-																				copyToClipboard(
-																					color.name,
-																					`Tailwind class ${color.name} copied to clipboard`,
-																					toast
-																				)}
-																		>
-																			<div
-																				class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
-																			>
-																				{color.name}
-																			</div>
-																		</button>
-																	{/each}
-																</div>
-															</div>
-														</div>
-													</div>
-												{/if}
-
-												<!-- Real World Examples -->
-												{#if colorInfo?.webExamples}
-													<div>
-														<h3 class="text-lg font-medium text-gray-900">Real World Examples</h3>
-														<ul class="mt-2 list-disc space-y-1 pl-5 text-gray-600">
-															{#each colorInfo.webExamples as example}
-																<li>{example}</li>
-															{/each}
-														</ul>
-													</div>
-												{/if}
-
-												<!-- Accessibility Guidelines -->
-												{#if colorInfo?.accessibility}
-													<div>
-														<h3 class="text-lg font-medium text-gray-900">
-															Accessibility Considerations
-														</h3>
-														<div class="rounded-md bg-blue-50 p-4 text-sm text-blue-700">
-															<p>{colorInfo.accessibility.textGuidelines}</p>
-															{#if colorInfo.accessibility.uiConsiderations}
-																<p class="mt-2">{colorInfo.accessibility.uiConsiderations}</p>
-															{/if}
-														</div>
-													</div>
-												{/if}
 											</div>
 										</div>
 									{/if}
@@ -883,6 +726,125 @@ export default {
 												<code class="text-sm text-gray-600">{color.name}</code>
 											</a>
 										{/each}
+									</div>
+								</div>
+								<div class="mt-8">
+									<h2 class="mb-4 text-lg font-semibold capitalize text-{$colorFamily}-600">
+										Other Color Combinations
+									</h2>
+									<div class="mt-4 grid gap-4 sm:grid-cols-2">
+										<!-- Monochromatic -->
+										<div class="rounded-lg border border-gray-200 p-4">
+											<h4 class="mb-2 text-sm font-medium text-gray-700">Monochromatic</h4>
+											<div class="flex gap-2">
+												{#each generateMonochromaticTailwindColors(inputColor) as color}
+													<button
+														class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+														style:background-color={color.hex}
+														onclick={() =>
+															copyToClipboard(
+																color.name,
+																`Tailwind class ${color.name} copied to clipboard`,
+																toast
+															)}
+													>
+														<div
+															class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+														>
+															{color.name}
+														</div>
+													</button>
+												{/each}
+											</div>
+										</div>
+
+										<!-- Complementary -->
+										<div class="rounded-lg border border-gray-200 p-4">
+											<h4 class="mb-2 text-sm font-medium text-gray-700">Complementary</h4>
+											<div class="flex gap-2">
+												{#each generateComplementaryTailwindColors(inputColor) as color}
+													<button
+														class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+														style:background-color={color.hex}
+														onclick={() =>
+															copyToClipboard(
+																color.name,
+																`Tailwind class ${color.name} copied to clipboard`,
+																toast
+															)}
+													>
+														<div
+															class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+														>
+															{color.name}
+														</div>
+													</button>
+												{/each}
+											</div>
+										</div>
+
+										<!-- Analogous -->
+										<div class="rounded-lg border border-gray-200 p-4">
+											<h4 class="mb-2 text-sm font-medium text-gray-700">Analogous</h4>
+											<div class="flex gap-2">
+												{#each generateAnalogousTailwindColors(inputColor) as color}
+													<button
+														class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+														style:background-color={color.hex}
+														onclick={() =>
+															copyToClipboard(
+																color.name,
+																`Tailwind class ${color.name} copied to clipboard`,
+																toast
+															)}
+													>
+														<div
+															class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+														>
+															{color.name}
+														</div>
+													</button>
+												{/each}
+											</div>
+										</div>
+
+										<!-- Triadic -->
+										<div class="rounded-lg border border-gray-200 p-4">
+											<h4 class="mb-2 text-sm font-medium text-gray-700">Triadic</h4>
+											<div class="flex gap-2">
+												{#each generateTriadicTailwindColors(inputColor) as color}
+													<button
+														class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+														style:background-color={color.hex}
+														onclick={() =>
+															copyToClipboard(
+																color.name,
+																`Tailwind class ${color.name} copied to clipboard`,
+																toast
+															)}
+													>
+														<div
+															class="absolute -bottom-6 left-1/2 hidden -translate-x-1/2 rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+														>
+															{color.name}
+														</div>
+													</button>
+												{/each}
+											</div>
+										</div>
+									</div>
+								</div>
+							{/if}
+							{#if colorInfo?.accessibility}
+								<div class="mt-8">
+									<h2 class="mb-4 text-lg font-semibold text-{$colorFamily}-600">
+										Accessibility Considerations
+									</h2>
+									<div class="rounded-md bg-blue-50 p-4 text-sm text-blue-700">
+										<p>{colorInfo.accessibility.textGuidelines}</p>
+										{#if colorInfo.accessibility.uiConsiderations}
+											<p class="mt-2">{colorInfo.accessibility.uiConsiderations}</p>
+										{/if}
 									</div>
 								</div>
 							{/if}

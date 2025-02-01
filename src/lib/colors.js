@@ -531,14 +531,13 @@ export function describeColor(hex) {
 		const [h, s, l] = hsl;
 
 		// Special cases first
-		if (l === 0) return 'This is black (0% lightness)';
-		if (l === 100) return 'This is white (100% lightness)';
+		if (l === 0) return 'A pure black tone';
+		if (l === 100) return 'A crisp, pure white';
 
-		// New check for very low saturation - treat as gray but mention undertone
+		// Handle grays with undertones
 		if (s < 10) {
-			// Increased from 1 to 10 for better gray detection
 			const undertone = getHueDescription(h);
-			return `This is a ${getLightnessDesc(l)} gray with a slight ${undertone} undertone`;
+			return `A sophisticated ${getLightnessDesc(l)} gray with subtle ${undertone} undertones`;
 		}
 
 		function getPerceivedSaturation(sat, light) {
@@ -551,22 +550,21 @@ export function describeColor(hex) {
 
 		function getSaturationDesc(sat, light) {
 			const perceivedSat = getPerceivedSaturation(sat, light);
-			if (perceivedSat < 5) return 'neutral';
-			if (perceivedSat < 15) return 'subtle';
-			if (perceivedSat < 35) return 'muted';
+			if (perceivedSat < 5) return 'understated';
+			if (perceivedSat < 15) return 'delicate';
+			if (perceivedSat < 35) return 'soft';
 			if (perceivedSat < 65) return 'rich';
 			if (perceivedSat < 85) return 'vibrant';
-			return 'vivid';
+			return 'bold';
 		}
 
-		// Move these function definitions outside the main function
 		function getLightnessDesc(light) {
-			if (light < 5) return 'nearly black';
-			if (light < 15) return 'very dark';
-			if (light < 35) return 'dark';
-			if (light > 95) return 'nearly white';
-			if (light > 85) return 'very light';
-			if (light > 65) return 'light';
+			if (light < 5) return 'almost black';
+			if (light < 15) return 'deep';
+			if (light < 35) return 'rich';
+			if (light > 95) return 'bright';
+			if (light > 85) return 'light';
+			if (light > 65) return 'soft';
 			if (light < 45) return 'deep';
 			return 'medium';
 		}
@@ -576,39 +574,39 @@ export function describeColor(hex) {
 			const hueRanges = [
 				{ range: [355, 360], name: 'red' },
 				{ range: [0, 10], name: 'red' },
-				{ range: [10, 20], name: 'scarlet' },
-				{ range: [20, 30], name: 'orange-red' },
+				{ range: [10, 20], name: 'ruby' },
+				{ range: [20, 30], name: 'vermillion' },
 				{ range: [30, 40], name: 'orange' },
-				{ range: [40, 50], name: 'golden-orange' },
-				{ range: [50, 60], name: 'golden-yellow' },
+				{ range: [40, 50], name: 'amber' },
+				{ range: [50, 60], name: 'golden' },
 				{ range: [60, 70], name: 'yellow' },
 				{ range: [70, 80], name: 'chartreuse' },
-				{ range: [80, 90], name: 'yellow-green' },
-				{ range: [90, 110], name: 'lime' },
-				{ range: [110, 130], name: 'green' },
-				{ range: [130, 150], name: 'forest' },
-				{ range: [150, 170], name: 'emerald' },
+				{ range: [80, 90], name: 'lime' },
+				{ range: [90, 110], name: 'spring green' },
+				{ range: [110, 130], name: 'emerald' },
+				{ range: [130, 150], name: 'forest green' },
+				{ range: [150, 170], name: 'pine' },
 				{ range: [170, 180], name: 'mint' },
 				{ range: [180, 190], name: 'teal' },
 				{ range: [190, 200], name: 'turquoise' },
-				{ range: [200, 220], name: 'aqua' },
-				{ range: [220, 240], name: 'sky blue' },
-				{ range: [240, 250], name: 'blue' },
+				{ range: [200, 220], name: 'azure' },
+				{ range: [220, 240], name: 'cerulean' },
+				{ range: [240, 250], name: 'sapphire' },
 				{ range: [250, 260], name: 'royal blue' },
 				{ range: [260, 270], name: 'indigo' },
-				{ range: [270, 280], name: 'violet' },
+				{ range: [270, 280], name: 'amethyst' },
 				{ range: [280, 290], name: 'purple' },
 				{ range: [290, 300], name: 'plum' },
 				{ range: [300, 310], name: 'magenta' },
-				{ range: [310, 325], name: 'hot pink' },
-				{ range: [325, 340], name: 'pink' },
-				{ range: [340, 355], name: 'rose' }
+				{ range: [310, 325], name: 'fuchsia' },
+				{ range: [325, 340], name: 'rose' },
+				{ range: [340, 355], name: 'crimson' }
 			];
 
 			const matchedColor = hueRanges.find(
 				(range) => range.range[0] <= normalizedHue && normalizedHue <= range.range[1]
 			);
-			return matchedColor?.name ?? 'gray';
+			return matchedColor?.name ?? 'neutral';
 		}
 
 		function shouldIncludeSaturation(s, l) {
@@ -620,13 +618,25 @@ export function describeColor(hex) {
 		const satDescription = getSaturationDesc(s, l);
 		const lightDescription = getLightnessDesc(l);
 
+		// Create more natural descriptions
 		if (shouldIncludeSaturation(s, l)) {
-			return `This is a ${lightDescription}, ${satDescription} ${primaryHue}`;
+			const phrases = [
+				`A ${satDescription}, ${lightDescription} ${primaryHue}`,
+				`A ${lightDescription} ${primaryHue} with ${satDescription} tones`,
+				`A ${satDescription} shade of ${primaryHue}`,
+				`A ${lightDescription} and ${satDescription} ${primaryHue}`
+			];
+			return phrases[Math.floor(Math.random() * phrases.length)];
 		} else {
-			return `This is a ${lightDescription} ${primaryHue}`;
+			const phrases = [
+				`A ${lightDescription} ${primaryHue}`,
+				`A subtle ${primaryHue}`,
+				`A ${lightDescription} tone of ${primaryHue}`
+			];
+			return phrases[Math.floor(Math.random() * phrases.length)];
 		}
 	} catch (err) {
-		// console.error('Error in describeColor:', err);
+		console.error('Error in describeColor:', err);
 		return 'Color description unavailable';
 	}
 }
@@ -636,11 +646,11 @@ export const defaultColorInfo = {
 		'A balanced mid-tone color that can be used for various UI elements while maintaining good contrast and visual appeal',
 	usage: {
 		ui: [
-			'Interactive elements like buttons and links',
-			'Secondary interface elements',
-			'Visual indicators and status markers',
-			'Decorative accents and highlights',
-			'Background elements and containers'
+			'interactive elements like buttons and links',
+			'secondary interface elements',
+			'visual indicators and status markers',
+			'decorative accents and highlights',
+			'background elements and containers'
 		],
 		bestPractices:
 			'Consider the context and hierarchy of your interface when using this color. Test contrast ratios in both light and dark modes',
@@ -694,7 +704,7 @@ export const colorEnrichment = {
 	blue: {
 		meaning: 'Trust, stability, professionalism',
 		usage: {
-			ui: ['Primary actions', 'Links', 'Brand elements'],
+			ui: ['primary actions', 'links', 'brand elements'],
 			bestPractices: 'Use darker shades for text, lighter shades for backgrounds',
 			combinations: ['Pair with orange for striking CTAs', 'Works well with grays and whites']
 		},
