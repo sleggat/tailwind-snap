@@ -219,10 +219,10 @@ export default {
 	{#if nearestColor}
 		{@const pageTitle =
 			nearestColor.distance === 0
-				? `Color ${inputColor} matches Tailwind's ${nearestColor.name} color class | ColorSnap`
+				? `Color ${inputColor} matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
 				: nearestColor.distance < 5
-					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | ColorSnap`
-					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | ColorSnap`}
+					? `Color ${inputColor} closely matches Tailwind's ${nearestColor.name} color class | Tailwind ColorSnap`
+					: `The closest Tailwind color to ${inputColor} is ${nearestColor.name} | Tailwind ColorSnap`}
 		{@const description = `Convert hex color ${inputColor} to the nearest Tailwind CSS color class or OKLCH value. ${colorDescription}.`}
 		{@const url = `https://tailwindcolorsnap.frontandback.co.nz/hex/${inputColor.replace('#', '').toLowerCase()}`}
 		{@const imageUrl = `https://tailwindcolorsnap.frontandback.co.nz/og/${inputColor.replace('#', '')}`}
