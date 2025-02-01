@@ -5,7 +5,11 @@
 	import { currentColor } from '$lib/stores';
 	import { goto } from '$app/navigation';
 
+	let pageTitle = 'All Tailwind CSS Colors - Complete Color Reference | Tailwind ColorSnap';
+	let description =
+		'Complete reference of all Tailwind CSS colors. Browse, search and copy all default Tailwind color classes and hex codes.';
 	let url = 'https://tailwindcolorsnap.frontandback.co.nz/colors';
+	let imageUrl = 'https://tailwindcolorsnap.frontandback.co.nz/og/fde047';
 
 	async function copyColor(text, type) {
 		await navigator.clipboard.writeText(text);
@@ -17,22 +21,24 @@
 </script>
 
 <svelte:head>
-	<title>All Tailwind CSS Colors - Complete Color Reference | Tailwind ColorSnap</title>
-	<meta
-		name="description"
-		content="Complete reference of all Tailwind CSS colors. Browse, search and copy all default Tailwind color classes and hex codes."
-	/>
-	<meta property="og:type" content="website" />
-	<meta
-		property="og:title"
-		content="All Tailwind CSS Colors - Complete Color Reference | Tailwind ColorSnap"
-	/>
-	<meta
-		property="og:description"
-		content="Browse all Tailwind CSS default colors. Find and copy exact hex codes and class names for your Tailwind projects."
-	/>
+	<title>{pageTitle}</title>
+	<meta name="description" content={description} />
 	<link rel="canonical" href={url} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={description} />
+	<meta property="og:url" content={url} />
+	<meta property="og:image" content={imageUrl} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:type" content="image/svg+xml" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={description} />
+	<meta name="twitter:image" content={imageUrl} />
 </svelte:head>
+
 <div class="min-h-screen bg-violet-50">
 	<header class="">
 		<div class="mx-auto max-w-7xl px-4 py-6">
