@@ -277,14 +277,16 @@ export default {
 					<div class="flex items-center gap-3">
 						<h2 class="text-4xl font-medium text-{$colorFamily}-700">Tailwind ColorSnap</h2>
 						<span
-							class="whitespace-nowrap rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-500"
+							class="whitespace-nowrap rounded-full bg-{$colorFamily}-100 px-2.5 py-1 text-xs font-medium text-{$colorFamily}-700"
 						>
 							Updated for <a
 								href="https://tailwindcss.com"
 								title="Tailwind CSS v4 Documentation"
 								aria-label="Tailwind CSS v4 Documentation">Tailwind v4</a
 							>
-						</span>
+						</span><span class="hidden">
+							Match and convert any hex color to the new OKLCH color values!</span
+						>
 					</div>
 				</div>
 			</header>
