@@ -443,7 +443,7 @@ export default {
 								<div class="py-6">
 									{#if colorInfo}
 										<h1 class="text-xl text-{$colorFamily}-500 font-semibold">
-											{colorDescription}.
+											{inputColor} - {colorDescription}.
 										</h1>
 										{#if colorInfo?.usage?.ui || colorInfo?.webExamples}
 											<ul class="text-md mt-3 list-disc space-y-1.5 pl-4 text-{$colorFamily}-700">
