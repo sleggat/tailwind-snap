@@ -65,12 +65,13 @@
 		<div class="grid grid-cols-11 gap-y-4 md:gap-x-0.5">
 			{#each tailwindColors as color}
 				<div class="flex flex-col rounded-lg bg-white px-1 py-0.5">
-					<button
-						class="mb-1 h-12 rounded-sm"
+					<a
+						class="group mb-1 block h-12 rounded-sm"
+						href="/hex/{color.hex.substring(1)}"
 						style:background-color={color.hex}
 						onclick={() => goto(`/hex/${color.hex.replace('#', '')}`)}
 						aria-label="Look up the Tailwind CSS color {color.name} (hex {color.hex})"
-					></button>
+					></a>
 					<div class="mb-1 text-xs font-medium text-gray-500">{color.name}</div>
 					<div class="mt-auto flex flex-wrap gap-1">
 						<button
