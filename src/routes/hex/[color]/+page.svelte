@@ -14,6 +14,7 @@
 		generateComplementaryColors,
 		generateAnalogousColors,
 		generateTriadicColors,
+		generateFabPalette,
 		generateMonochromaticTailwindColors,
 		generateComplementaryTailwindColors,
 		generateAnalogousTailwindColors,
@@ -836,6 +837,39 @@ export default {
 															{color.name}
 														</div>
 													</button>
+												{/each}
+											</div>
+										</div>
+
+										<!-- Brand -->
+										<div class="rounded-lg border border-gray-200 p-4">
+											<h4 class="mb-2 text-sm font-medium text-gray-700">Complete Brand Palette</h4>
+											<div class="space-y-2">
+												{#each generateFabPalette(inputColor) as color}
+													<div class="flex items-center gap-3">
+														<button
+															class="group relative h-12 w-12 rounded-md shadow-sm transition-transform hover:scale-110"
+															style:background-color={color.hex}
+															onclick={() =>
+																copyToClipboard(
+																	color.nearest.name,
+																	`Tailwind class ${color.nearest.name} copied to clipboard`,
+																	toast
+																)}
+														>
+															<div
+																class="absolute -right-48 hidden rounded bg-gray-900 px-2 py-1 text-xs text-white group-hover:block"
+															>
+																{color.nearest.name}
+															</div>
+														</button>
+														<div class="flex flex-col">
+															<span class="text-sm font-medium text-gray-700">{color.role}</span>
+															<code class="text-xs text-gray-500"
+																>{color.hex} / {color.nearest.name}</code
+															>
+														</div>
+													</div>
 												{/each}
 											</div>
 										</div>

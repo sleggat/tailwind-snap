@@ -525,19 +525,30 @@ export function getContrastRatio(hex1, hex2) {
 	return (lightest + 0.05) / (darkest + 0.05);
 }
 
+function getDescriptionFormat(h, s, l) {
+	// Use the last few digits of each value to determine the format
+	// This ensures similar but different colors get different formats
+	const hueDigit = Math.floor(h * 100) % 4; // 0-3
+	const satDigit = Math.floor(s * 100) % 3; // 0-2
+	const lightDigit = Math.floor(l * 100) % 3; // 0-2
+
+	// Combine these values to get a deterministic but varied selection
+	return (hueDigit + satDigit + lightDigit) % 4; // 0-3
+}
+
 export function describeColor(hex) {
 	try {
 		const hsl = hexToHsl(hex);
 		const [h, s, l] = hsl;
 
-		// Special cases first
+		// Special cases first (no change)
 		if (l === 0) return 'A pure black tone';
 		if (l === 100) return 'A crisp, pure white';
 
-		// Handle grays with undertones
+		// Handle grays with undertones (no change)
 		if (s < 10) {
 			const undertone = getHueDescription(h);
-			return `A sophisticated ${getLightnessDesc(l)} gray with subtle ${undertone} undertones`;
+			return `A ${getLightnessDesc(l)} gray with hints of ${undertone}`;
 		}
 
 		function getPerceivedSaturation(sat, light) {
@@ -559,14 +570,14 @@ export function describeColor(hex) {
 		}
 
 		function getLightnessDesc(light) {
-			if (light < 5) return 'almost black';
-			if (light < 15) return 'deep';
-			if (light < 35) return 'rich';
-			if (light > 95) return 'bright';
-			if (light > 85) return 'light';
-			if (light > 65) return 'soft';
+			if (light < 5) return 'very dark';
+			if (light < 15) return 'dark';
+			if (light < 35) return 'deep';
+			if (light > 95) return 'very bright';
+			if (light > 85) return 'bright';
+			if (light > 65) return 'light';
 			if (light < 45) return 'deep';
-			return 'medium';
+			return 'mid-tone'; // instead of 'medium'
 		}
 
 		function getHueDescription(hue) {
@@ -618,22 +629,24 @@ export function describeColor(hex) {
 		const satDescription = getSaturationDesc(s, l);
 		const lightDescription = getLightnessDesc(l);
 
-		// Create more natural descriptions
+		// Instead of random selection, use color values to determine format
 		if (shouldIncludeSaturation(s, l)) {
+			const format = getDescriptionFormat(h, s, l);
 			const phrases = [
-				`A ${satDescription}, ${lightDescription} ${primaryHue}`,
-				`A ${lightDescription} ${primaryHue} with ${satDescription} tones`,
-				`A ${satDescription} shade of ${primaryHue}`,
-				`A ${lightDescription} and ${satDescription} ${primaryHue}`
+				`A ${lightDescription} ${primaryHue} with ${satDescription} undertones`,
+				`A ${satDescription} shade of ${lightDescription} ${primaryHue}`,
+				`A ${satDescription} ${primaryHue} in ${lightDescription} tones`,
+				`A ${lightDescription} ${primaryHue}, notable for its ${satDescription} character`
 			];
-			return phrases[Math.floor(Math.random() * phrases.length)];
+			return phrases[format];
 		} else {
+			const format = getDescriptionFormat(h, s, l) % 3;
 			const phrases = [
-				`A ${lightDescription} ${primaryHue}`,
-				`A subtle ${primaryHue}`,
-				`A ${lightDescription} tone of ${primaryHue}`
+				`A ${lightDescription} shade of ${primaryHue}`,
+				`A gentle ${lightDescription} ${primaryHue}`,
+				`A ${lightDescription} ${primaryHue} with subtle tones`
 			];
-			return phrases[Math.floor(Math.random() * phrases.length)];
+			return phrases[format];
 		}
 	} catch (err) {
 		console.error('Error in describeColor:', err);
@@ -1063,6 +1076,50 @@ export function getColorInfo(colorName, colorHex) {
 			triadic: generateTriadicColors(colorHex)
 		}
 	};
+}
+export function generateFabPalette(baseColor) {
+	const hsl = hexToHsl(baseColor);
+	const [h, s, l] = hsl;
+
+	// Primary colors - Original and a slightly different shade
+	const primary = baseColor;
+	const primaryAccent = HSLToHex(h, Math.min(s * 1.1, 100), Math.max(l * 0.9, 20));
+
+	// Complementary color at a slightly different lightness
+	const complementaryHue = (h + 180) % 360;
+	const complementary = HSLToHex(complementaryHue, s * 0.9, Math.min(l * 1.1, 80));
+
+	// Neutral slate colors for text and UI elements
+	const slate1 = findNearestTailwindColor('#1e293b').hex; // slate-800 for text
+	const slate2 = findNearestTailwindColor('#e2e8f0').hex; // slate-200 for backgrounds
+
+	return [
+		{
+			hex: primary,
+			nearest: findNearestTailwindColor(primary),
+			role: 'Primary brand color'
+		},
+		{
+			hex: primaryAccent,
+			nearest: findNearestTailwindColor(primaryAccent),
+			role: 'Brand accent'
+		},
+		{
+			hex: complementary,
+			nearest: findNearestTailwindColor(complementary),
+			role: 'Complementary accent'
+		},
+		{
+			hex: slate1,
+			nearest: findNearestTailwindColor(slate1),
+			role: 'Text & UI elements'
+		},
+		{
+			hex: slate2,
+			nearest: findNearestTailwindColor(slate2),
+			role: 'Backgrounds & borders'
+		}
+	];
 }
 
 export function generateMonochromaticColors(baseColor, count = 5) {
