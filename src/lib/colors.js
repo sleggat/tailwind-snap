@@ -548,7 +548,7 @@ export function describeColor(hex) {
 		// Handle grays with undertones (no change)
 		if (s < 10) {
 			const undertone = getHueDescription(h);
-			return `A ${getLightnessDesc(l)} gray with hints of ${undertone}`;
+			return `A ${getLightnessDesc(l)} gray with a hint of ${undertone}`;
 		}
 
 		function getPerceivedSaturation(sat, light) {
